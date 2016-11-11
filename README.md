@@ -7,5 +7,8 @@ Ryan
   - Create user authentication system
   - Organize filesystem to extract zip into each user's file
 
+Stefan
+  - Error handling. LOTS OF ERROR HANDLING.
+  - Make Client a Service
 
 BTW editing the file is nano will NOT add any spaces, so edit it in another editor, if that doesn't work you can edit it on the website
