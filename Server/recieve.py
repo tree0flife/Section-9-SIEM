@@ -1,6 +1,7 @@
 
 import socket
 import sys
+import random
 from _thread import *
 from zipfile import *
 
@@ -17,40 +18,54 @@ except socket.error as e:
 s.listen(100)
 print('Listening for connections')
 
-def threaded_client(conn):
+def authUser(conn):
 	data = conn.recv(1024)
 	clientID = data.decode('utf-8')
 	data = conn.recv(1024)
 	clientPWD = data
 	data = conn.recv(1024)
 	clientTOK = data
-	authUser = 0
+	confUser = 0
 
 	authCheck = open ("/home/matrix/testing/Server/users.txt", "r")
 
-	for user in authCheck:
-		if clientID = f.readline():
-			if 
-		file = open("/home/matrix/testing/Server/tmp/myData.zip", "w+b")
+	for userInfo in authCheck:
+		if clientID == userInfo:
+			if clientPWD == userInfo:
+				if clientTOK = userInfo:
+					threaded_client(conn)
+					confUser = 1
+				elif clientTOK == ""
+					conn.send(str.encode(random.random(100000, 999999))
+					threaded_client(conn)
+					confUser = 1
+	
+	if confUser == 0:
+		cpnn.send(str.encode("Login Failed")
+				
 
-		while True:
-			try:
-				data = conn.recv(1024)
-				file.write (data)
-			except ConnectionResetError:
-				break
-			if not data:
-				break
-		file.close()
-		zipArch = ZipFile ("myData.zip", "r")
-		zipArch.extractall("/home/matrix/testing/Server/clientInfo")
-		conn.close()
-		zipArch.close()
-		authUser = 1
+def threaded_client(conn):
+	conn.send(str.encode("Login Succeeded"))
+	file = open("/home/matrix/testing/Server/tmp/myData.zip", "w+b")
+
+	while True:
+		try:
+			data = conn.recv(1024)
+			file.write (data)
+		except ConnectionResetError:
+			break
+		if not data:
+			break
+	file.close()
+	zipArch = ZipFile ("myData.zip", "r")
+	zipArch.extractall("/home/matrix/testing/Server/clientInfo")
+	conn.close()
+	zipArch.close()
+	authUser = 1
 
 while (1):
 
 	conn, addr = s.accept()
 	print ('connected to: '+addr[0]+':'+str(addr[1]))
 
-	start_new_thread(threaded_client,(conn,))
+	start_new_thread(authUser,(conn,))
