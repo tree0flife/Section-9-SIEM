@@ -13,6 +13,7 @@ Ryan
   - Organize filesystem to extract zip into each user's file
 
 Stefan
+  - Handle tokens
   - Compatability (i.e. some distro's may or may not have a /var/log/messages. Need to check for that)
   - Error Handling
     - abnormal termination
