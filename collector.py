@@ -5,7 +5,7 @@ import re
 import zipfile
 import shutil
 import getpass
-#from pyutmp import UtmpFile
+#from pyutmp import UtmpFile.
 
 class globs(object):
 	
