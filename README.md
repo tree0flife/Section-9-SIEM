@@ -18,7 +18,6 @@ Stefan
     - abnormal termination
     - no internet connection
       - connection cut off during dispatch
-      
   - Make the client a service in (/etc/init.d)
   - Implement tear.py in main program
   - Write install script(s)
