@@ -18,7 +18,7 @@ s.listen(100)
 print('Listening for connections')
 
 def threaded_client(conn):
-	conn.send(str.encode('Welcome\n'))
+	#conn.send(str.encode('Welcome\n'))
 
 	#zipArch = ZipFile ("myData.zip", "w")
 	# file = open("myData.zip", "ab")
@@ -34,12 +34,11 @@ def threaded_client(conn):
 	while True:
 		try:
 			data = conn.recv(1024)
+			file.write (data)
 		except ConnectionResetError:
 			break
-
 		if not data:
 			break
-		file.write (data)
 	#conn.sendall(str.encode(reply))
 	file.close()
 	#zipArch = ZipFile ("myData.zip", "r")
