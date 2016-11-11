@@ -4,15 +4,23 @@ SIEM for Software Engineering
 Things to work on:
 
 Ryan
+  - Check how many packages are being recieved in case the client lost connection
+    - check # of packages
+    - get timestamps and name accordingly
   - Error checking
     - If file is a proper zip file
     - If login credentials are correct
     - If token ID is correct
     - If there are error creating or opening the file
-  - Create user authentication system
+  - Create user authentication system (find secure way)
   - Organize filesystem to extract zip into each user's file
 
 Stefan
+  - Check if client loses connection and can't upload
+    - send number of packets to server
+    - send username, then password, then token (send blank if the client doesn't yet have a token)
+      - if the sever has to send you a token recieve it, otherwise skip so it doesn't hang
+    - make sure the authentication is enrypted over the network
   - Handle tokens
   - Compatability (i.e. some distro's may or may not have a /var/log/messages. Need to check for that)
   - Error Handling
