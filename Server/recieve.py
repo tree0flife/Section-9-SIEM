@@ -18,34 +18,35 @@ s.listen(100)
 print('Listening for connections')
 
 def threaded_client(conn):
-	#conn.send(str.encode('Welcome\n'))
+	data = conn.recv(1024)
+	clientID = data.decode('utf-8')
+	data = conn.recv(1024)
+	clientPWD = data
+	data = conn.recv(1024)
+	clientTOK = data
+	authUser = 0
 
-	#zipArch = ZipFile ("myData.zip", "w")
-	# file = open("myData.zip", "ab")
+	authCheck = open ("/home/matrix/testing/Server/users.txt", "r")
 
-	file = open("myData.zip", "w+b")
+	for user in authCheck:
+		if clientID = f.readline():
+			if 
+		file = open("/home/matrix/testing/Server/tmp/myData.zip", "w+b")
 
-	#while True:
-	#filesize = conn.recv(1024)
-	#data = conn.recv(1024)
-
-	#print ("loop 1")
-	#reply = 'Server output: ' + data.decode('utf-8')
-	while True:
-		try:
-			data = conn.recv(1024)
-			file.write (data)
-		except ConnectionResetError:
-			break
-		if not data:
-			break
-	#conn.sendall(str.encode(reply))
-	file.close()
-	#zipArch = ZipFile ("myData.zip", "r")
-	#zipArch.extractall("/home/matrix/info")
-	conn.close()
-	#zipArch.close()
-	print ("I'm done!")
+		while True:
+			try:
+				data = conn.recv(1024)
+				file.write (data)
+			except ConnectionResetError:
+				break
+			if not data:
+				break
+		file.close()
+		zipArch = ZipFile ("myData.zip", "r")
+		zipArch.extractall("/home/matrix/testing/Server/clientInfo")
+		conn.close()
+		zipArch.close()
+		authUser = 1
 
 while (1):
 

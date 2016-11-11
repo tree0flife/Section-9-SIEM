@@ -1,0 +1,386 @@
+ifconfig
+sudo apt update
+sudo apt upgrade
+ifconfig
+sudo ssh start
+sudo apt install openssh-server 
+ssh
+service ssh start
+ifconfig
+clear
+ls
+w
+sudo su
+exit
+python --version
+python3 --version
+-m pip install -U pip
+man pip
+python -m pip install -U pip
+python3 -m pip install -U pip
+python3 
+echo hi
+ls
+rm test/
+rm -r test/
+ls
+clear
+ls
+w
+vim recieve.py 
+sqlite3
+vim recieve.py 
+ls
+exit
+ls
+sudo service ssh status
+echo hi
+ls
+mkdir test
+ls
+nano recieve.py
+vi recieve.py
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+ps
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+ps
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+LS
+ls
+python3 recieve.py 
+nano recieve.py 
+python3 recieve.py 
+ls
+nano recieve.py 
+ls
+python3 recieve.py 
+nano recieve.py
+ps
+nano recieve.py
+ifconfig
+reboot
+w
+ls
+vim recieve.py
+ls
+cd ..
+ls
+cp matrix/recieve.py .
+ls -l matrix/
+sudo cp matrix/recieve.py .
+ls
+vim recieve.py 
+man scp 
+w
+ls
+scp stefan@142.55.0.15:recieve.py ~/Desktop/
+ps aux | grep scp
+scp matrix@24.150.80.188:recieve.py ~/Desktop/
+ls
+exit
+cd ..
+rm recieve.py 
+sudo rm recieve.py 
+ls
+cd matrix/
+ls
+vim recieve.py.save 
+exit
+nano recieve.py
+quit
+exit
+ls
+mkdir tmp
+mkdir info
+ls
+nano recieve.py
+python3 recieve.py 
+ls
+rm Download.zip 
+nano recieve.py
+cd /
+ls
+cd home/
+ls
+cd matrix/
+nano recieve.py
+python3 recieve.py 
+ls
+rm Download.zip 
+nano recieve.py
+python3 recieve.py 
+ls
+cd tmp
+ls
+rm Download.zip 
+cd ..
+nano recieve.py
+nano send.py
+cd tmp/
+nano test1.tst
+nano test2.txt
+cd ..
+nano send.py 
+python3 send.py 
+ls tmp/
+ls
+nano send.py 
+python3 send.py 
+ls
+nano send.py 
+python3 send.py 
+ls
+nano send.py 
+python3 send.py 
+ls
+nano send.py 
+python3 send.py 
+ls
+nano send.py 
+nano  recieve.py
+nano send.py 
+python3 send.py 
+cd tmp/
+ls
+nano test1.tst 
+ls
+rm test1.tst 
+cd ..
+python3 send.py 
+ls
+sudo apt install unzip 
+unzip myTest.zip -d /info
+sudo unzip myTest.zip -d /info
+cd info/
+ls
+cd /info/
+ls
+cd home/
+ls
+cd matrix/
+ls
+cd tmp/
+ls
+rm /info/
+rm -r /info/
+sudo rm -r /info/
+cd ~
+unzip myTest.zip 
+ls /initrd.img
+ls ./info/
+unzip myTest.zip ./info/
+ls /
+ls
+unzip myTest.zip /
+unzip myTest.zip -d /
+ls
+nano send.py 
+python3 send.py 
+ls
+sudo rm -r home/
+find test1.txt
+find test1.txt /
+cs
+clear
+nanao send.py 
+nano send.py 
+python3 send.py 
+cp ./tmp/test1.txt test1.txt
+cp ./tmp/test2.txt test2.txt
+rm tmp/
+sudo -r rm ./tmp/
+sudo rm -r ./tmp/
+lsd
+ls
+python3 send.py 
+nano  send.py 
+unzip myTest.zip 
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+mkdir tmp
+python3 recieve.py 
+ls
+ls /tmp/
+ls tmp/
+nano recieve.py
+python3 send.py 
+ls
+nano  send.py 
+python3 send.py 
+ls tmp
+ls -a
+ls
+rm tmpDownload.zip 
+nano send.py 
+python3 send.py 
+unzip tmp/Download.zip 
+cd tmp/
+unzip Download.zip 
+ls
+rm test*
+ls
+cd ..
+nano recieve.py
+python3 recieve.py 
+ls
+ls tmp/
+nano recieve.py
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+ls
+rm test*
+python3 recieve.py 
+nano recieve.py
+python3 recieve.py 
+ls
+cat test1.txt 
+nano recieve.py
+rm test*
+python3 recieve.py 
+ls info/
+nano recieve.py
+python3 recieve.py 
+python3 send.py 
+this is a test > test1.txt
+this is a test >> test1.txt
+echo this is a test > test1.txt
+echo this is also a test > test2.txt
+ls
+python3 send.py 
+python3 recieve.py 
+python3 send.py 
+nano recieve.py
+python3 recieve.py 
+ls /initrd.img
+ls info/
+ls
+rm myTest.zip 
+nano recieve.py
+python3 recieve.py 
+ls
+ls tmp/
+nano send.py 
+nano recieve.py
+nano send.py 
+nano recieve.py
+nano send.py 
+ls
+ls tmp/
+cd tmp/
+unzip Download.zip 
+ls
+rm test*
+cd ..
+nano send.py 
+exit
+ls
+vim recieve.py
+ps aux | recieve
+ps aux | grep recieve
+ls tmp
+ls info
+less test.tx
+clear
+ls
+less test1.txt 
+cat test2.txt 
+vim recieve2.py 
+sudo su
+vim recieve2.py 
+clear
+ls
+ls inf
+ls info/
+rm *.log
+cd info/
+clear
+rm *.log
+ls
+rm syslog 
+unzip myData.zip 
+ls
+ls -l myData.zip 
+sudo unzip myData.zip 
+ls
+exit
+ls
+cd testing/
+ls
+cd ..
+cp testing/Client/TEST_local_server.py ../
+sudo cp testing/Client/TEST_local_server.py ../
+cd testing/Client/
+cd ..
+ls
+su root
+sudo su
+exit
+ls
+nano send.py 
+python3 recieve.py 
+ls info/
+ls
+unzip myData.zip 
+cat myData.zip 
+nano recieve2.py 
+nano recieve.py 
+nano recieve2.py 
+clear
+nano recieve2.py 
+cat recieve
+cat recieve2.py 
+ls info/
+ls
+unzip myData.zip 
+nano recieve2.py 
+python3 recieve2.py 
+chmod 777 recieve2.py 
+python3 recieve2.py 
+ls
+unzip myData.zip 
+python3 recieve2.py 
+ls
+unzip myData.zip 
+cp myData.zip info/myData.zip
+cd info/
+ls
+jar -xvf myData.zip 
+ls
+unzip myData.zip 
+sudo su
+exit
