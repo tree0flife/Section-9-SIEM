@@ -22,7 +22,7 @@ def authUser(conn):
 	authCheck = open ("/home/matrix/testing/Server/users.txt", "r")
 	counter = 0
 	cont = 0
-	
+
 	while True:
 		data = conn.recv(1024)
 		clientID = data.decode('utf-8')
@@ -60,15 +60,14 @@ def authUser(conn):
 				else:
 					cont = 0
 					counter = 0
-		if confUser == 0
+		if confUser == 0:
 			conn.send(str.encode('Invaild Login')
 
-	threaded_client(conn, clientID)
+	threaded_client(conn)
 
-
-def threaded_client(conn, clientID):
+def threaded_client(conn):
 	conn.send(str.encode("Login Succeeded"))
-	file = open("/home/matrix/testing/Server/tmp/" + clientID + ".zip", "w+b")
+	file = open("/home/matrix/testing/Server/tmp/myData.zip", "w+b")
 
 	while True:
 		try:
