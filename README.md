@@ -32,3 +32,12 @@ Stefan
   - Write install script(s)
 
 BTW editing the file is nano will NOT add any spaces, so edit it in another editor, if that doesn't work you can edit it on the website
+
+Sylvain
+  - configure python environment on server
+  -install django
+  - graphing app //graphos(flot)
+  - login
+  - workflow management(git)
+  - setting up models/db
+  - figure what else is down the pipeline 
