@@ -19,34 +19,44 @@ s.listen(100)
 print('Listening for connections')
 
 def authUser(conn):
-	data = conn.recv(1024)
-	clientID = data#.decode('utf-8')
-	data = conn.recv(1024)
-	clientPWD = data
-	data = conn.recv(1024)
-	clientTOK = data
-	confUser = 0
-
+	#while True:
+		data = conn.recv(1024)
+		clientID = data.decode('utf-8')
+		print (clientID)
+		data = conn.recv(1024)
+		clientPWD = data.decode('utf-8')
+		print (clientPWD)
+		data = conn.recv(1024)
+		clientTOK = data.decode('utf-8')
+		print (clientTOK)
+		#print (str.encode('got everything'))
+		#conn.send(str(b'test'))
+		#confUser = 0
+		print ('sending')
+		conn.sendall(str.encode('fail\n'))
+		print ('sent')
+"""
 	authCheck = open ("/home/matrix/testing/Server/users.txt", "r")
 
 	for userInfo in authCheck:
 		if clientID == userInfo:
 			if clientPWD == userInfo:
-				if clientTOK = userInfo:
+				if clientTOK == userInfo:
 					threaded_client(conn)
 					confUser = 1
-				elif clientTOK == ""
+				elif clientTOK == "":
 					token = random.random(100000, 999999)
 					conn.send(str.encode(token)
 					userInfo.write(token)
 					threaded_client(conn)
 					confUser = 1
-	
+
 	if confUser == 0:
 		conn.send(str.encode("Login Failed")
 
 	else
 		threaded_client(conn)
+"""
 
 def threaded_client(conn):
 	conn.send(str.encode("Login Succeeded"))
