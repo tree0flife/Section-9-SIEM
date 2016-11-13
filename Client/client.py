@@ -16,7 +16,7 @@ def createConnection(): #create connection to client Ryan
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
-            # sock.connect(("localhost", 9999)) # for testing locally 
+            # sock.connect(("localhost", 9999)) # for testing locally
             sock.connect(('24.150.80.188', 3000))
             print '[+] Connected'
             success = 1
@@ -25,19 +25,26 @@ def createConnection(): #create connection to client Ryan
             print '[-] Connection Refused - Retrying'
             time.sleep(5)
 
-    if success == 1
+    if success == 1:
         login(sock)
 
 def login(sock): #login to the server Ryan
     #authCheck = open ("creds.txt", "r+")
     #if os.stat("creds.txt").st_size == 0
     while True:
-        username = input('Enter your username: ')
-        password = input('Enter your password: ')
+        username = raw_input('Enter your username: ')
+        password = raw_input('Enter your password: ')
+	tok = 'none'
+	time.sleep(1)
+	print username
+	print password
+	print tok
         sock.send(username)
         sock.send(password)
-        sock.send("")
-        response = sock.recv(1024)
+	time.sleep(1)
+        sock.send(tok)
+	print 'sent'
+        response = sock.recv(1024).decode('utf-8')
         print response
 """
     for userInfo in authCheck:
@@ -80,11 +87,11 @@ if __name__ == "__main__":
     collector.execute()
     createConnection() #Ryan
     #dispatch()
-    
+
     # NOTE: need to modify to watch for certain messages(signals) sent from the server
     #       (ex. server sends REFRESH, client execute()'s and sends data)
-    #       
-    #       So the should be a constant connection between client and server or fork 
+    #
+    #       So the should be a constant connection between client and server or fork
     #	    another process that waits for incoming connections and when it recieves
     #	    a Message from the server. It will send a signal to this process
     while True:
