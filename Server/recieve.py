@@ -36,13 +36,17 @@ def authUser(conn):
 					threaded_client(conn)
 					confUser = 1
 				elif clientTOK == ""
-					conn.send(str.encode(random.random(100000, 999999))
+					token = random.random(100000, 999999)
+					conn.send(str.encode(token)
+					userInfo.write(token)
 					threaded_client(conn)
 					confUser = 1
 	
 	if confUser == 0:
-		cpnn.send(str.encode("Login Failed")
-				
+		conn.send(str.encode("Login Failed")
+
+	else
+		threaded_client(conn)
 
 def threaded_client(conn):
 	conn.send(str.encode("Login Succeeded"))
