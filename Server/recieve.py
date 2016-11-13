@@ -18,6 +18,25 @@ except socket.error as e:
 s.listen(100)
 print('Listening for connections')
 
+def threaded_client(conn):
+	conn.send(str.encode("Login Succeeded"))
+	file = open("/home/matrix/testing/Server/tmp/myData.zip", "w+b")
+
+	while True:
+		try:
+			data = conn.recv(1024)
+			file.write (data)
+		except ConnectionResetError:
+			break
+		if not data:
+			break
+	file.close()
+	zipArch = ZipFile ("myData.zip", "r")
+	zipArch.extractall("/home/matrix/testing/Server/clientInfo")
+	conn.close()
+	zipArch.close()
+	authUser = 1
+
 def authUser(conn):
 	authCheck = open ("/home/matrix/testing/Server/users.txt", "r")
 	counter = 0
@@ -64,25 +83,6 @@ def authUser(conn):
 			conn.send(str.encode('Invaild Login')
 
 	threaded_client(conn)
-
-def threaded_client(conn):
-	conn.send(str.encode("Login Succeeded"))
-	file = open("/home/matrix/testing/Server/tmp/myData.zip", "w+b")
-
-	while True:
-		try:
-			data = conn.recv(1024)
-			file.write (data)
-		except ConnectionResetError:
-			break
-		if not data:
-			break
-	file.close()
-	zipArch = ZipFile ("myData.zip", "r")
-	zipArch.extractall("/home/matrix/testing/Server/clientInfo")
-	conn.close()
-	zipArch.close()
-	authUser = 1
 
 while (1):
 
