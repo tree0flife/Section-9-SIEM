@@ -29,45 +29,54 @@ def createConnection(): #create connection to client Ryan
         login(sock)
 
 def login(sock): #login to the server Ryan
-    #authCheck = open ("creds.txt", "r+")
-    #if os.stat("creds.txt").st_size == 0
-    while True:
-        username = raw_input('Enter your username: ')
-        password = raw_input('Enter your password: ')
-	tok = 'none'
-	time.sleep(1)
-	print username
-	print password
-	print tok
-        sock.send(username)
+    authCheck = open ("creds.txt", "r+")
+    if os.stat("creds.txt").st_size == 0:
+    	while True:
+        	username = raw_input('Enter your username: ')
+        	password = raw_input('Enter your password: ')
+		tok = 'none'
+		sock.send(username)
+        	sock.send(password)
+		time.sleep(1)
+        	sock.send(tok)
+		print 'sent'
+        	response = sock.recv(1024).decode('utf-8')
+        	if respone == 'welcome'
+			authCheck.write(username)
+			authCheck.write(password)
+			authCheck.write(token)
+			break
+		else
+			print 'Login failed, please try again'
+    else
+    	clientID = authCheck.readline()
+	clientPWD = authCheck.readline()
+	clientTOK = authCheck.readline()
+	sock.send(username)
         sock.send(password)
 	time.sleep(1)
         sock.send(tok)
-	print 'sent'
         response = sock.recv(1024).decode('utf-8')
-        print response
-"""
-    for userInfo in authCheck:
-		if clientID == userInfo:
-			if clientPWD == userInfo:
-				if clientTOK = userInfo:
-					threaded_client(conn)
-					confUser = 1
-				elif clientTOK == ""
-					token = random.random(100000, 999999)
-					conn.send(str.encode(token)
-					userInfo.write(token)
-					threaded_client(conn)
-					confUser = 1
+        if respone != 'welcome'
+		print 'Login failed, please try again'
+		while True:
+        		username = raw_input('Enter your username: ')
+        		password = raw_input('Enter your password: ')
+			tok = 'none'
+			sock.send(username)
+        		sock.send(password)
+			time.sleep(1)
+        		sock.send(tok)
+        		response = sock.recv(1024).decode('utf-8')
+        		if respone == 'welcome'
+				authCheck.write(username)
+				authCheck.write(password)
+				authCheck.write(token)
+				break
+			else
+				print 'Login failed, please try again'
 
-    data = conn.recv(1024)
-	clientID = data#.decode('utf-8')
-	data = conn.recv(1024)
-	clientPWD = data
-	data = conn.recv(1024)
-	clientTOK = data
-	confUser = 0
-"""
+	dispatch(sock)
 
 def dispatch(sock):
     print '[*] Opening file'
