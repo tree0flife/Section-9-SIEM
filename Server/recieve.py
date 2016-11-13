@@ -20,7 +20,7 @@ print('Listening for connections')
 
 def authUser(conn):
 	data = conn.recv(1024)
-	clientID = data.decode('utf-8')
+	clientID = data#.decode('utf-8')
 	data = conn.recv(1024)
 	clientPWD = data
 	data = conn.recv(1024)
