@@ -87,7 +87,7 @@ def threaded_client(conn):
 		if not data:
 			break
 	file.close()
-	zipArch = ZipFile ("myData.zip", "r")
+	zipArch = ZipFile ("/home/matrix/testing/Server/tmp/myData.zip", "r")
 	zipArch.extractall("/home/matrix/testing/Server/clientInfo")
 	conn.close()
 	zipArch.close()

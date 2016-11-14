@@ -52,7 +52,7 @@ def login(sock): #login to the server Ryan
 			authCheck.write(password + '\n')
 			print 'waiting for token'
 			tok = sock.recv(1024).decode('utf-8')
-				print 'got token'
+			print 'got token'
 			authCheck.write(tok + '\n')
 			break
 		else:
