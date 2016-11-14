@@ -29,10 +29,12 @@ def createConnection(flag): #create connection to client Ryan
 		continue
 
 	    counter += 1
-
 	    if counter == 4:
 		return -1
 
+# Clean this shit up
+#
+#
 def login(sock): #login to the server Ryan
     try:
         authCheck = open ("creds.txt", "r+")
@@ -96,6 +98,10 @@ def login(sock): #login to the server Ryan
 		else:
 			print 'Login failed, please try again'
 
+# Need to check for multiple packages. Or be lazy and read whatevers in the directory
+# Scratch that. Have the collector zip all the zips in the entire directory.
+#
+#
 def dispatch(sock):
     print '[*] Opening file'
     f = open('package.zip', 'rb')
