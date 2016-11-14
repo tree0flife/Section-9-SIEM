@@ -66,25 +66,30 @@ def login(sock): #login to the server Ryan
 	time.sleep(1)
         sock.send(clientTOK)
         response = sock.recv(1024).decode('utf-8')
-        if respone != 'welcome':
+        if response != 'welcome':
 		print 'Login failed, please try again'
 		while True:
         		username = raw_input('Enter your username: ')
-        		password = raw_input('Enter your password: ')
+    	   		password = raw_input('Enter your password: ')
 			tok = 'none'
 			sock.send(username)
-        		sock.send(password)
+       			sock.send(password)
 			time.sleep(1)
-        		sock.send(tok)
-        		response = sock.recv(1024).decode('utf-8')
-        		if respone == 'welcome':
-				authCheck.write(clientID)
-				authCheck.write(clientPWD)
-				clientTok = sock.recv(1024).decode('utf-8')
-				authCheck.write(clientTOK)
+       			sock.send(tok)
+			print 'waiting for server response'
+       			response = sock.recv(1024).decode('utf-8')
+			print 'got response'
+       			if response == 'welcome':
+				print 'accepted'
+				authCheck.write(username + '\n')
+				authCheck.write(password + '\n')
+				print 'waiting for token'
+				tok = sock.recv(1024).decode('utf-8')
+				print 'got token'
+				authCheck.write(tok + '\n')
 				break
-			else:
-				print 'Login failed, please try again'
+		else:
+			print 'Login failed, please try again'
 
     dispatch(sock)
 
