@@ -33,30 +33,31 @@ def login(sock): #login to the server Ryan
         authCheck = open ("creds.txt", "r+")
     except IOError:
         authCheck = open ("creds.txt", "w")
-    #if os.stat("creds.txt").st_size == 0:
-    while True:
-       	username = raw_input('Enter your username: ')
-       	password = raw_input('Enter your password: ')
-	tok = 'none'
-	sock.send(username)
-       	sock.send(password)
-	time.sleep(1)
-       	sock.send(tok)
-	print 'waiting for server response'
-       	response = sock.recv(1024).decode('utf-8')
-	print 'got response'
-       	if response == 'welcome':
-		print 'accepted'
-		authCheck.write(username + '\n')
-		authCheck.write(password + '\n')
-		print 'waiting for token'
-		tok = sock.recv(1024).decode('utf-8')
-		print 'got token'
-		authCheck.write(tok + '\n')
-		break
-	else:
-		print 'Login failed, please try again'
-"""    else:
+
+    if os.stat("creds.txt").st_size == 0:
+    	while True:
+    	   	username = raw_input('Enter your username: ')
+    	   	password = raw_input('Enter your password: ')
+		tok = 'none'
+		sock.send(username)
+       		sock.send(password)
+		time.sleep(1)
+       		sock.send(tok)
+		print 'waiting for server response'
+       		response = sock.recv(1024).decode('utf-8')
+		print 'got response'
+       		if response == 'welcome':
+			print 'accepted'
+			authCheck.write(username + '\n')
+			authCheck.write(password + '\n')
+			print 'waiting for token'
+			tok = sock.recv(1024).decode('utf-8')
+				print 'got token'
+			authCheck.write(tok + '\n')
+			break
+		else:
+			print 'Login failed, please try again'
+    else:
     	clientID = authCheck.readline()
 	clientPWD = authCheck.readline()
 	clientTOK = authCheck.readline()
@@ -84,7 +85,7 @@ def login(sock): #login to the server Ryan
 				break
 			else:
 				print 'Login failed, please try again'
-"""
+
     dispatch(sock)
 
 def dispatch(sock):
