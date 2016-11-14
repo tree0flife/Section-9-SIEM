@@ -24,6 +24,8 @@ def authUser(conn):
 	while True:
 		cont = 0
 		counter = 0
+		userPasses = 0
+		token = 0
 		print ('getting user info')
 		data = conn.recv(1024)
 		clientID = data.decode('utf-8')
@@ -36,13 +38,16 @@ def authUser(conn):
 			userInfo = userInfo.rstrip('\n')
 			if counter == 0:
 				if clientID == userInfo:
+					userPasses += 1
 					cont = 1
 					counter = 1
 				else:
+					userPasses += 1
 					cont = 0
 					counter = 1
 			elif counter == 1:
 				if clientPWD == userInfo and cont == 1:
+					#savePos = authCheck.tell()
 					cont = 2
 					counter = 2
 				else:
@@ -59,7 +64,8 @@ def authUser(conn):
 					conn.send(str.encode('welcome'))
 					token = random.randrange(100000, 999999)
 					conn.send(str.encode(str(token)))
-					authCheck.write(str(token))
+					#authCheck.seek(savePos)
+					#authCheck.write(str(token) + '\n')
 					confUser = 1
 					break
 				else:
@@ -87,7 +93,7 @@ def threaded_client(conn):
 		if not data:
 			break
 	file.close()
-	zipArch = ZipFile ("myData.zip", "r")
+	zipArch = ZipFile ("/home/matrix/testing/Server/tmp/myData.zip", "r")
 	zipArch.extractall("/home/matrix/testing/Server/clientInfo")
 	conn.close()
 	zipArch.close()
