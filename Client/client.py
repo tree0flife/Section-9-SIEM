@@ -42,13 +42,17 @@ def login(sock): #login to the server Ryan
        	sock.send(password)
 	time.sleep(1)
        	sock.send(tok)
-	print 'sent'
+	print 'waiting for server response'
        	response = sock.recv(1024).decode('utf-8')
+	print 'got response'
        	if response == 'welcome':
-		authCheck.write(username)
-		authCheck.write(password)
+		print 'accepted'
+		authCheck.write(username + '\n')
+		authCheck.write(password + '\n')
+		print 'waiting for token'
 		tok = sock.recv(1024).decode('utf-8')
-		authCheck.write(tok)
+		print 'got token'
+		authCheck.write(tok + '\n')
 		break
 	else:
 		print 'Login failed, please try again'
@@ -81,7 +85,7 @@ def login(sock): #login to the server Ryan
 			else:
 				print 'Login failed, please try again'
 """
-#	dispatch(sock)
+    dispatch(sock)
 
 def dispatch(sock):
     print '[*] Opening file'

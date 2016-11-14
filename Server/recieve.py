@@ -18,7 +18,7 @@ s.listen(100)
 print('Listening for connections')
 
 def authUser(conn):
-	authCheck = open ("/home/matrix/testing/Server/users.txt", "r")
+	authCheck = open ("/home/matrix/testing/Server/users.txt", "r+")
 	confUser = 0
 
 	while True:
@@ -33,55 +33,50 @@ def authUser(conn):
 		clientTOK = data.decode('utf-8')
 		print ('checking info')
 		for userInfo in authCheck:
-			print ('going through file')
+			userInfo = userInfo.rstrip('\n')
 			if counter == 0:
-				if str(clientID) == str(userInfo):
-					print ('made 1')
+				if clientID == userInfo:
 					cont = 1
 					counter = 1
 				else:
-					print ('didnt make 1')
-					print (clientID == userInfo)
-					print (clientID + " " + userInfo)
 					cont = 0
 					counter = 1
 			elif counter == 1:
 				if clientPWD == userInfo and cont == 1:
-					print ('made 2')
 					cont = 2
 					counter = 2
 				else:
-					print ('didnt made 2')
 					cont = 0
 					counter = 2
 			elif counter == 2:
 				if clientTOK == userInfo and cont == 2:
-					print ('made 3 1st option')
+					print ('matched token')
 					conn.send(str.encode('welcome'))
 					confUser = 1
 					break
-				elif clientTOK == "none" and cont == 2:
-					print ('made 3 2nd option')
+				elif clientTOK == 'none' and cont == 2:
+					print ('empty token')
 					conn.send(str.encode('welcome'))
-					token = random.random(100000, 999999)
-					conn.send(str.encode(token))
-					userInfo.write(token)
+					token = random.randrange(100000, 999999)
+					conn.send(str.encode(str(token)))
+					authCheck.write(str(token))
 					confUser = 1
 					break
 				else:
-					print ('didnt make 3')
+					print ('token mismatch')
 					cont = 0
 					counter = 0
-		print ('failed')
 		if confUser == 0:
 			conn.send(str.encode('Invaild Login'))
 			print ('sent failed')
+		elif confUser == 1:
+			break
 
 	threaded_client(conn)
 
 def threaded_client(conn):
 	#conn.send(str.encode("Login Succeeded"))
-	file = open("/home/matrix/testing/Server/tmp/myData.zip", "w+b")
+	file = open("/home/matrix/testing/Server/tmp/myData.zip", "wb")
 
 	while True:
 		try:
