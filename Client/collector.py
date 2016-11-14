@@ -2,25 +2,23 @@
 
 import os
 import re
+import time
 import zipfile
 import shutil
 import getpass
 #from pyutmp import UtmpFile
 
+#------------------------Class Definition------------------------#
 class globs(object):
-	
-    def __init__(self):
-        self.user = []
-        self.path = []
+
+    def __init__(self, user, path, package):
+        self.user = getpass.getuser() 
+        self.path = None
+	self.package = 0 
         self.setup(self.user, self.path)
 
-    # apt-history individual ???
     def setup(self, user, path):
-        spam = os.listdir('/home/')
-
-        for line in spam:
-            self.user.append(line)
-            self.path.append('/home/%s/.bash_history' % line)
+	self.path = '/home/%s/.bash_history' % self.user
 
 #################################################################
 # 		            Open file                           #
@@ -30,7 +28,7 @@ def openfile(name, rasp):
     if name == 'apt-hist.log':
         path = '/var/log/apt/history.log'
     elif name == 'bashhist.log':
-        path = rasp.path[0]
+        path = rasp.path
     else:
         path = '/var/log/%s' % name
 
@@ -43,10 +41,15 @@ def openfile(name, rasp):
 #################################################################
 # 		     Begin Zipping and Cleanup			#
 #################################################################
-def cleanup(pathdir):
+def cleanup(pathdir, rasp):
+
+    record = '%s,%s' % (rasp.user, time.strftime('%d-%m-%Y_%H-%M-%S'))
+    r = open(record, 'w')
+    r.close()
+
     os.chdir(pathdir[:-5])
 
-    zip_name = zipfile.ZipFile("package.zip", "w", zipfile.ZIP_DEFLATED)
+    zip_name = zipfile.ZipFile("package_" + rasp.package + ".zip", "w", zipfile.ZIP_DEFLATED)
     dirlist = os.listdir(pathdir)
     for list in dirlist:
         get_file = os.path.join(pathdir, list)
@@ -56,25 +59,43 @@ def cleanup(pathdir):
     shutil.rmtree(pathdir)
 
 #################################################################
+#			   RUN					#
+#################################################################
+def run(rasp):
+	print "Working..."
+	pathdir = os.getcwd() + '/temp'
+	os.mkdir(pathdir, 0700)
+	os.chdir(pathdir)
+
+
+	openfile('dpkg.log', None)
+	openfile('auth.log', None)
+	openfile('kern.log', None)
+	openfile('syslog', None)
+	openfile('apt-hist.log', None)
+	openfile('bashhist.log', rasp)
+
+	cleanup(pathdir, rasp)
+	print "Done.."
+
+#################################################################
 #			   System Logs			        #
 # 			    ( MAIN )                            #
 #################################################################
-#if __name__ == "__main__":
-def execute():
-
-    print "Working..."
-    pathdir = os.getcwd() + '/temp'
-    os.mkdir(pathdir, 0700)
-    os.chdir(pathdir)
+def execute(idle, q):
 
     rasp = globs()
+    run(rasp)
 
-    openfile('dpkg.log', None)
-    openfile('auth.log', None)
-    openfile('kern.log', None)
-    openfile('syslog', None)
-    openfile('apt-hist.log', None)
-    openfile('bashhist.log', rasp)
-
-    cleanup(pathdir)
-    print "Done.."
+    # If idle is 1, the client could not establish a connection
+    # The collector will continuously run until its notified a connection has been made
+    if idle == 1:
+	time = 0
+	while q.empty() == True:
+	    time.sleep(1)
+	    time += 1
+	    if time == 300:
+		rasp.package += 1
+		run(rasp)
+    else:
+	run(rasp)

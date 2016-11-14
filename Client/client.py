@@ -7,26 +7,31 @@ import sys
 import time
 import os #for filesize Ryan
 import collector
-# not yet implemented in this program
-from tear import pcapkiller
-#
+from tear import pcapkiller # not yet implemented in this program
+from multiprocessing import Process, Queue
 
-def createConnection(): #create connection to client Ryan
-    success = 0
+
+def createConnection(flag): #create connection to client Ryan
+    counter = 1
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
             # sock.connect(("localhost", 9999)) # for testing locally
             sock.connect(('24.150.80.188', 3000))
             print '[+] Connected'
-            success = 1
-            break
+	    return sock
+
         except socket.error:
-            print '[-] Connection Refused - Retrying'
+	    print '[-] Connection [' + str(counter) + '] Refused - Retrying'
             time.sleep(5)
 
-    if success == 1:
-        login(sock)
+	    if flag == 1:
+		continue
+
+	    counter += 1
+
+	    if counter == 4:
+		return -1
 
 def login(sock): #login to the server Ryan
     try:
@@ -36,27 +41,27 @@ def login(sock): #login to the server Ryan
 
     if os.stat("creds.txt").st_size == 0:
     	while True:
-    	   	username = raw_input('Enter your username: ')
-    	   	password = raw_input('Enter your password: ')
-		tok = 'none'
-		sock.send(username)
-       		sock.send(password)
-		time.sleep(1)
-       		sock.send(tok)
-		print 'waiting for server response'
-       		response = sock.recv(1024).decode('utf-8')
-		print 'got response'
-       		if response == 'welcome':
-			print 'accepted'
-			authCheck.write(username + '\n')
-			authCheck.write(password + '\n')
-			print 'waiting for token'
-			tok = sock.recv(1024).decode('utf-8')
-			print 'got token'
-			authCheck.write(tok + '\n')
-			break
-		else:
-			print 'Login failed, please try again'
+	    username = raw_input('Enter your username: ')
+	    password = raw_input('Enter your password: ')
+	    tok = 'none'
+	    sock.send(username)
+	    sock.send(password)
+	    time.sleep(1)
+	    sock.send(tok)
+	    print 'waiting for server response'
+	    response = sock.recv(1024).decode('utf-8')
+	    print 'got response'
+	    if response == 'welcome':
+		print 'accepted'
+		authCheck.write(username + '\n')
+		authCheck.write(password + '\n')
+		print 'waiting for token'
+		tok = sock.recv(1024).decode('utf-8')
+		print 'got token'
+		authCheck.write(tok + '\n')
+		break
+	    else:
+		print 'Login failed, please try again'
     else:
     	clientID = authCheck.readline()
 	clientPWD = authCheck.readline()
@@ -67,31 +72,29 @@ def login(sock): #login to the server Ryan
         sock.send(clientTOK)
         response = sock.recv(1024).decode('utf-8')
         if response != 'welcome':
-		print 'Login failed, please try again'
-		while True:
-        		username = raw_input('Enter your username: ')
-    	   		password = raw_input('Enter your password: ')
-			tok = 'none'
-			sock.send(username)
-       			sock.send(password)
-			time.sleep(1)
-       			sock.send(tok)
-			print 'waiting for server response'
-       			response = sock.recv(1024).decode('utf-8')
-			print 'got response'
-       			if response == 'welcome':
-				print 'accepted'
-				authCheck.write(username + '\n')
-				authCheck.write(password + '\n')
-				print 'waiting for token'
-				tok = sock.recv(1024).decode('utf-8')
-				print 'got token'
-				authCheck.write(tok + '\n')
-				break
+	    print 'Login failed, please try again'
+	    while True:
+		username = raw_input('Enter your username: ')
+		password = raw_input('Enter your password: ')
+		tok = 'none'
+		sock.send(username)
+		sock.send(password)
+		time.sleep(1)
+		sock.send(tok)
+		print 'waiting for server response'
+		response = sock.recv(1024).decode('utf-8')
+		print 'got response'
+		if response == 'welcome':
+			print 'accepted'
+			authCheck.write(username + '\n')
+			authCheck.write(password + '\n')
+			print 'waiting for token'
+			tok = sock.recv(1024).decode('utf-8')
+			print 'got token'
+			authCheck.write(tok + '\n')
+			break
 		else:
 			print 'Login failed, please try again'
-
-    dispatch(sock)
 
 def dispatch(sock):
     print '[*] Opening file'
@@ -108,9 +111,28 @@ def dispatch(sock):
     print '[*] Connection closed'
 
 if __name__ == "__main__":
-    collector.execute()
-    createConnection() #Ryan
-    #dispatch()
+
+    sock = createConnection(0)
+
+    # If client cannot establish connection, fork. Have the parent continuously try to
+    # connect. And have the child continuously collect log data
+    #
+    # Need to write function for this or at least do some clever routing to keep things going
+    #
+    if sock == -1: 
+	q = Queue()
+	p = Process(target=collector.execute, args=(1, q))
+	p.start()
+	sock = createConnection(1)
+	q.put('done')
+	p.join()
+
+    login(sock)
+
+    # Initial Execute and Dispatch
+    collector.execute(0, None)
+    dispatch(sock)
+
 
     # NOTE: need to modify to watch for certain messages(signals) sent from the server
     #       (ex. server sends REFRESH, client execute()'s and sends data)
@@ -122,6 +144,6 @@ if __name__ == "__main__":
         #time.sleep(300)
         time.sleep(10)
         print 'collecting...'
-        collector.execute()
+        collector.execute(0, None)
         print 'sending...'
-        dispatch()
+        dispatch(sock)
