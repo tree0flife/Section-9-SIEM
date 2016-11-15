@@ -80,17 +80,23 @@ def authUser(conn):
 					counter = 0
 				else:
 					print ('token failed')
-		if confUser == 0:
-			conn.send(str.encode('Invaild Login'))
-			print ('sent failed')
-		elif confUser == 1:
+
+		if confUser == 1:
 			break
 
-	if (userPasses % 2) == 0 and (userPasses % 3) != 0
+	if (userPasses % 2) == 0 and (userPasses % 3) != 0:
+		if clientTOK == 'none':
+			#print ('empty token')
+			conn.send(str.encode('welcome'))
+			token = random.randrange(100000, 999999)
+			conn.send(str.encode(str(token)))
+		else:
+			conn.send(str.encode('Invalid Login'))
+			print ('sent failed message')
 
 	authCheck.seek(0, 0)
 	#print (str(userPasses))
-	while redo < userPasses - 1:
+	while redo < userPasses:
 		authCheck.readline()
 		redo += 1
 	authCheck.truncate()
