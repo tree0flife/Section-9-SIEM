@@ -47,6 +47,7 @@ def login(sock): #login to the server Ryan
 	    password = raw_input('Enter your password: ')
 	    tok = 'none'
 	    sock.send(username)
+	    time.sleep(1)
 	    sock.send(password)
 	    time.sleep(1)
 	    sock.send(tok)
@@ -65,10 +66,11 @@ def login(sock): #login to the server Ryan
 	    else:
 		print 'Login failed, please try again'
     else:
-    	clientID = authCheck.readline()
-	clientPWD = authCheck.readline()
-	clientTOK = authCheck.readline()
+    	clientID = authCheck.readline().rstrip('\n')
+	clientPWD = authCheck.readline().rstrip('\n')
+	clientTOK = authCheck.readline().rstrip('\n')
 	sock.send(clientID)
+	time.sleep(1)
         sock.send(clientPWD)
 	time.sleep(1)
         sock.send(clientTOK)
@@ -80,6 +82,7 @@ def login(sock): #login to the server Ryan
 		password = raw_input('Enter your password: ')
 		tok = 'none'
 		sock.send(username)
+		time.sleep(1)
 		sock.send(password)
 		time.sleep(1)
 		sock.send(tok)
@@ -125,7 +128,7 @@ if __name__ == "__main__":
     #
     # Need to write function for this or at least do some clever routing to keep things going
     #
-    if sock == -1: 
+    if sock == -1:
 	q = Queue()
 	p = Process(target=collector.execute, args=(1, q))
 	p.start()
