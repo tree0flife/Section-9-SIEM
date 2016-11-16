@@ -9,8 +9,6 @@ Ryan
     - get timestamps and name accordingly
   - Error checking
     - If file is a proper zip file
-    - If login credentials are correct
-    - If token ID is correct
     - If there are error creating or opening the file
   - Create user authentication system (find secure way)
   - Organize filesystem to extract zip into each user's file
