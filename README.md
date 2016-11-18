@@ -38,4 +38,11 @@ Sylvain
   - login
   - workflow management(git)
   - setting up models/db
-  - figure what else is down the pipeline 
+  - figure what else is down the pipeline
+
+Imad
+- creating client-side HTML files (login.html and register.html)
+  - forms and validation
+  - storing information in database (sqlite3)
+- creating server-side HTML file (upload.html)
+  - making sure it is robust (strictly only accept compressed data - zip files of any format + other requirements)  
