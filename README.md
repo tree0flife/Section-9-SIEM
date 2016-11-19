@@ -18,8 +18,8 @@ Ryan
   - [ CLIENT-SIDE ]Handle tokens
 
 Stefan
-  + Continues to collect data when client can't connect
-    + added a giftwrap() in collectory.py to zip the entire directory that has all the package(s).zip before sending.
+  - [+] Continues to collect data when client can't connect
+    - [+] Added a giftwrap() in collectory.py to zip the entire directory that has all the package(s).zip before sending.
   - Implement tear.py into the main program
   - Compatability (i.e. some distro's may or may not have a /var/log/messages. Need to check for that)
   - Error Handling
