@@ -38,7 +38,7 @@ def createConnection(flag): #create connection to client Ryan
 		return -1
 
 #################################################################
-#                          DISPATCH                             #
+#                        AUTHENTICATION                         #
 #	 NOTE: need to clean up or put in another module	#
 #################################################################
 def login(sock): #login to the server Ryan
