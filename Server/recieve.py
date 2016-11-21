@@ -1,5 +1,6 @@
 import socket
 import sys
+import os
 import random
 from _thread import *
 from zipfile import *
@@ -112,6 +113,9 @@ def authUser(conn):
 
 def threaded_client(conn, clientID):
 	#conn.send(str.encode("Login Succeeded"))
+	userPath = r'/home/matrix/UserStorage/'
+	if not os.path.exists(userPath):
+		os.makedirs(userPath)
 	file = open("/home/matrix/UserStorage/" + clientID + ".zip", "wb")
 	#zipArch = ZipFile ("/home/matrix/testing/Server/tmp/myData.zip", "w")
 
@@ -124,6 +128,10 @@ def threaded_client(conn, clientID):
 		if not data:
 			break
 	file.close()
+
+	currentUserPath = r'/home/matrix/UserStorage/' + clientID
+	if not os.path.exists(currentUserPath):
+		os.makedirs(currentUserPath)
 
 	try:
 		zipArch = ZipFile ("/home/matrix/UserStorage/" + clientID + ".zip", "r")
