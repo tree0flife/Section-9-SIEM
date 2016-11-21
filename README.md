@@ -12,10 +12,7 @@ Ryan
     - If there are error creating or opening the file
   - Create user authentication system (find secure way)
   - Organize filesystem to extract zip into each user's file
-  - [ CLIENT-SIDE ]Send username, then password, then token (send blank if the client doesn't yet have a token)
-  - [ CLIENT-SIDE ]If the sever has to send you a token recieve it, otherwise skip so it doesn't hang
   - [ CLIENT-SIDE ]Make sure the authentication is enrypted over the network
-  - [ CLIENT-SIDE ]Handle tokens
 
 Stefan
   - [+] Continues to collect data when client can't connect
