@@ -16,8 +16,8 @@ sock.listen(10)
 
 i = 0
 while True:
-    sc, address = sock.accept()
 
+    sc, address = sock.accept()
     print '[*] ADDRESS:', address, 'connected'
 
     f = open('file_' + str(i) + '.zip', 'wb')
@@ -30,5 +30,6 @@ while True:
     f.close()
     sc.close()
     break
+    
+sock.close()
 
-s.close()
