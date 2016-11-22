@@ -1,0 +1,24 @@
+#!/bin/sh
+# /etc/init.d/siem9
+
+case "$1" in
+    'start')
+        ################## execute client.py ################### 
+        # if possible try to get pid of client.py for shutdown #
+        # and store it in $PID
+        #
+        # /root/siem9/client.py
+
+        touch /var/lock/subsys/siem9
+        ;;
+    'stop')
+        ################## when system shuts down ################### 
+        # send a signal to pid of client.py. The client will have a #
+        # signal handler. That will stop sending and finish zipping #
+        # all logs and keep them on disk for the next startup.      #
+        #
+        # kill $PID
+
+        rm -f /var/lock/subsys/siem9
+        ;;
+esac

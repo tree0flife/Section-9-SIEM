@@ -1,0 +1,47 @@
+#!/bin/bash
+
+if [[ $USER != "root" ]]; then
+    echo "You will have errors if you don't run this as root"
+    exit
+fi
+
+case "$1" in 
+    'install')
+        mkdir /root/siem9
+        cp client.py /root/siem9
+        cp collector.py /root/siem9
+        cp tear.py /root/siem9
+        chmod 700 /root/siem9/*
+        
+        name=siem9
+        cp siem9 /etc/init.d/$name
+
+        # FOR STARTUP
+        ln -s /etc/init.d/$name /etc/rc3.d/S04$name
+        ln -s /etc/init.d/$name /etc/rc5.d/S04$name
+
+        # FOR SHUTDOWN 
+        ln -s /etc/init.d/$name /etc/rc0.d/K01$name
+        ln -s /etc/init.d/$name /etc/rc1.d/K01$name
+        ln -s /etc/init.d/$name /etc/rc2.d/K01$name
+        ln -s /etc/init.d/$name /etc/rc4.d/K01$name
+        ln -s /etc/init.d/$name /etc/rc6.d/K01$name
+
+        systemctl daemon-reload
+
+        echo 'successfully installed.'
+        ;;
+    'uninstall')
+        rm -r /root/siem9
+        rm -r /etc/rc*.d/S04siem9
+        rm -r /etc/rc*.d/K01siem9
+        rm /etc/init.d/siem9
+
+        systemctl daemon-reload
+
+        echo 'successfully uninstalled.'
+        ;;
+    *)
+        echo "usage: <filename> install|uninstall"
+        ;;
+esac
