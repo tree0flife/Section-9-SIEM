@@ -15,15 +15,10 @@ Ryan
   - [ CLIENT-SIDE ]Make sure the authentication is enrypted over the network
 
 Stefan
-  - [+] Continues to collect data when client can't connect
-    - [+] Added a giftwrap() in collectory.py to zip the entire directory that has all the package(s).zip before sending.
-  - Implement tear.py into the main program
-  - Compatability (i.e. some distro's may or may not have a /var/log/messages. Need to check for that)
+  - Implement tear.py into the main program (using Scapy)
   - Error Handling
     - connection cut off during dispatch()
-    - sending/saving packages before system shutdown
-  - Make the client a service in (/etc/init.d)
-  - Write install script(s)
+    - need to write signal handler in client.py
 
 Sylvain
   - configure python environment on server
