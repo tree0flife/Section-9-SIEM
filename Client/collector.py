@@ -12,9 +12,10 @@ import getpass
 class globs(object):
 
     def __init__(self):
-        self.user = getpass.getuser() 
+        #self.user = getpass.getuser()
+	self.user = os.getlogin()
         self.path = None
-	self.package = 0 
+	self.package = 0
         self.setup(self.user, self.path)
 
     def setup(self, user, path):
@@ -49,7 +50,7 @@ def cleanup(pathdir, rasp):
 
     os.chdir(pathdir)
 
-    zip_name = zipfile.ZipFile("package_" + str(rasp.package) + ".zip", "w", zipfile.ZIP_DEFLATED)
+    zip_name = zipfile.ZipFile("/UserCreds/package_" + str(rasp.package) + ".zip", "w", zipfile.ZIP_DEFLATED)
     dirlist = os.listdir(pathdir + '/temp')
     for list in dirlist:
         get_file = os.path.join(pathdir + '/temp/', list)
@@ -62,10 +63,10 @@ def cleanup(pathdir, rasp):
 #			    GIFT WRAP				#
 #################################################################
 def giftwrap(pathdir):
-    
+
     os.chdir(pathdir.strip('deliverables'))
 
-    zip_name = zipfile.ZipFile("final_package.zip", "w", zipfile.ZIP_DEFLATED)
+    zip_name = zipfile.ZipFile("/UserCreds/final_package.zip", "w", zipfile.ZIP_DEFLATED)
     dirlist = os.listdir(pathdir)
     for list in dirlist:
         get_file = os.path.join(pathdir, list)
@@ -101,8 +102,12 @@ def run(rasp, pathdir):
 def execute(idle, q):
 
     rasp = globs()
-    pathdir = os.getcwd() + '/deliverables'
-    os.mkdir(pathdir, 0700)
+    if not os.path.exists(r'/UserCreds/'):
+	os.makedirs(r'/UserCreds/', 700)
+    if not os.path.exists(r'/UserCreds/deliverables/'):
+	os.makedirs(r'/UserCreds/deliverables/', 700)
+    pathdir = '/UserCreds/deliverables'
+    #os.mkdir(pathdir, 0700)
 
     # If idle is 1, the client could not establish a connection
     # The collector will continuously run until its notified a connection has been made

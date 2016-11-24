@@ -19,6 +19,7 @@ s.listen(100)
 print('Listening for connections')
 
 def authUser(conn):
+	print (os.getlogin())
 	authCheck = open ("/home/matrix/testing/Server/users.txt", "r+")
 	confUser = 0
 
@@ -43,6 +44,7 @@ def authUser(conn):
 			userPasses += 1
 			userInfo = userInfo.rstrip('\n')
 			if counter == 0:
+			#	print (clientID)
 				if clientID == userInfo:
 					print ('\tUsername: pass')
 					cont = 1
@@ -52,6 +54,7 @@ def authUser(conn):
 					cont = 0
 					counter = 1
 			elif counter == 1:
+			#	print (clientPWD)
 				if clientPWD == userInfo and cont == 1:
 					print ('\tPassword: pass')
 					cont = 2
@@ -61,6 +64,7 @@ def authUser(conn):
 					cont = 0
 					counter = 2
 			elif counter == 2:
+			#	print (clientTOK)
 				if clientTOK == userInfo and cont == 2:
 					print ('\tToken: match')
 					conn.send(str.encode('welcome'))
@@ -113,12 +117,13 @@ def authUser(conn):
 
 def threaded_client(conn, clientID):
 	#conn.send(str.encode("Login Succeeded"))
-	userPath = r'/home/matrix/UserStorage/'
+	userPath = r'/UserStorage/'
 	if not os.path.exists(userPath):
-		os.makedirs(userPath)
-	file = open("/home/matrix/UserStorage/" + clientID + ".zip", "wb")
-	#zipArch = ZipFile ("/home/matrix/testing/Server/tmp/myData.zip", "w")
+		os.makedirs(userPath, mode = 700)
+	file = open("/UserStorage/" + clientID + ".zip", "wb")
+	#zipArch = ZipFile ("/UserStorage/" + clientID + ".zip", "w")
 
+	#with ZipFile('/UserStorage/' + clientID + '.zip', 'w') as zipArch:
 	while True:
 		try:
 			data = conn.recv(1024)
@@ -129,16 +134,24 @@ def threaded_client(conn, clientID):
 			break
 	file.close()
 
-	currentUserPath = r'/home/matrix/UserStorage/' + clientID
+	currentUserPath = r'/UserStorage/' + clientID + '/'
 	if not os.path.exists(currentUserPath):
 		os.makedirs(currentUserPath)
 
 	try:
-		zipArch = ZipFile ("/home/matrix/UserStorage/" + clientID + ".zip", "r")
-		zipArch.extractall("/home/matrix/UserStorage/" + clientID + "/")
+		zipArch = ZipFile ("/UserStorage/" + clientID + ".zip", "r")
+	#except BadZipFile:
+		#print ('Error reading zip file')
+		#zipArch.close()
+
+	#try:
+		#print (zipArch.getinfo(date_time))
+		#with zipArch.open("auth.log") as pack:
+		#	print (pack.getinfo(date_time))
+		zipArch.extractall("/UserStorage/" + clientID + "/")
 		zipArch.close()
 	except BadZipFile:
-		print ('Error opening zip file')
+		print ('Error extracting zip file')
 
 	conn.close()
 
@@ -147,5 +160,5 @@ while (1):
 	conn, addr = s.accept()
 	print ('connected to: '+addr[0]+':'+str(addr[1]))
 
-	#start_new_thread(authUser,(conn,))
+	#start_new_thread(authUser,(conn,)) enable this again when complete
 	authUser(conn)
