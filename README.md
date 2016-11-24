@@ -36,4 +36,4 @@ Imad
   - forms and validation
   - storing information in database (sqlite3)
 - creating server-side HTML file (upload.html)
-  - making sure it is robust (strictly only accept compressed data - zip files of any format + other requirements)  
+  - making sure it is robust (strictly only accept compressed data - zip files of any format + other requirements) 
