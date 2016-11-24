@@ -21,12 +21,14 @@ Stefan
     - need to write signal handler in client.py
 
 Sylvain
-  - configure python environment on server
-  -install django
+  X configure python environment on server
+  X install django
   - graphing app //graphos(flot)
-  - login
   - workflow management(git)
   - setting up models/db
+  X setting up Gunicorn,
+  - need to setup NGINX + proper port and setup TLS
+  - create and admin
   - figure what else is down the pipeline
 
 Imad
