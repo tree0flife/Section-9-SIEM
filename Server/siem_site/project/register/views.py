@@ -14,7 +14,7 @@ class MemberFormView(View):
     def post(self, request):
         form = self.form_class(request.POST)
 
-        if form.is_valid:
+        if form.is_valid():
             user = form.save(commit=False)
 
             username = form.cleaned_data['username']
