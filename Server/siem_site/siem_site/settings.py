@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["24.150.80.188"]
 # Application definition
 
 INSTALLED_APPS = [
+	'register',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,7 +55,7 @@ ROOT_URLCONF = 'siem_site.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR), 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,4 +119,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+<<<<<<< HEAD
 STATIC_ROOT = os.path.join(BASE_DIR,'static/')
+=======
+
+LOGIN_REDIRECT_URL = 'homepage'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+>>>>>>> dd9746053ad8e7538a140c0a24bb927932bd8311
