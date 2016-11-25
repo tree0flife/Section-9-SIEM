@@ -2,7 +2,8 @@ import socket
 import sys
 import os
 import random
-from _thread import *
+#from _thread import *
+#from multiprocessing import Pool
 from zipfile import *
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -153,7 +154,9 @@ def threaded_client(conn, clientID):
 	except BadZipFile:
 		print ('Error extracting zip file')
 
+	print ('Completed successfuly')
 	conn.close()
+	os._exit(0)
 
 while (1):
 
@@ -161,4 +164,12 @@ while (1):
 	print ('connected to: '+addr[0]+':'+str(addr[1]))
 
 	#start_new_thread(authUser,(conn,)) enable this again when complete
-	authUser(conn)
+	cld = os.fork()
+	if cld == 0:
+		try:
+			authUser(conn)
+		except socket.error as e:
+			if e.error == errno.EPIPE:
+				print ('Connection closed')
+			else:
+				print ('Error: ' + e)
