@@ -33,12 +33,21 @@ def authUser(conn):
 		redo = 0
 		needTok = 0
 		print ('Getting user info:')
-		data = conn.recv(1024)
-		clientID = data.decode('utf-8')
-		data = conn.recv(1024)
-		clientPWD = data.decode('utf-8')
-		data = conn.recv(1024)
-		clientTOK = data.decode('utf-8')
+		
+		try:
+			data = conn.recv(1024)
+			clientID = data.decode('utf-8')
+			data = conn.recv(1024)
+			clientPWD = data.decode('utf-8')
+			data = conn.recv(1024)
+			clientTOK = data.decode('utf-8')
+		except socket.error as e:
+			if e.error == errno.EPIPE:
+				print ('Connection closed')
+				return 1
+			else:
+				print ('Error: ' + e)
+				return 1
 		#print ('checking info')
 		for userInfo in authCheck:
 			#print (userInfo)
@@ -68,16 +77,30 @@ def authUser(conn):
 			#	print (clientTOK)
 				if clientTOK == userInfo and cont == 2:
 					print ('\tToken: match')
-					conn.send(str.encode('welcome'))
+					try:
+						conn.send(str.encode('welcome'))
+					except socket.error as e:
+						if e.error == errno.EPIPE:
+							print ('Connection closed')
+							return 1
+						else:
+							print ('Error: ' + e)
+							return 1
 					confUser = 1
 					break
 				elif clientTOK == 'none' and cont == 2:
 					print ('\tToken: generating')
-					conn.send(str.encode('welcome'))
-					token = random.randrange(100000, 999999)
-					conn.send(str.encode(str(token)))
-					#authCheck.seek(savePos)
-					#authCheck.write(str(token) + '\n')
+					try:
+						conn.send(str.encode('welcome'))
+						token = random.randrange(100000, 999999)
+						conn.send(str.encode(str(token)))
+					except socket.error as e:
+						if e.error == errno.EPIPE:
+							print ('Connection closed')
+							return 1
+						else:
+							print ('Error: ' + e)
+							return 1
 					confUser = 1
 					newTok = 1
 					break
@@ -93,13 +116,29 @@ def authUser(conn):
 		if (userPasses % 2) == 0 and (userPasses % 3) != 0:
 			if clientTOK == 'none':
 				print ('empty token')
-				conn.send(str.encode('welcome'))
-				token = random.randrange(100000, 999999)
-				conn.send(str.encode(str(token)))
+				try:
+					conn.send(str.encode('welcome'))
+					token = random.randrange(100000, 999999)
+					conn.send(str.encode(str(token)))
+				except socket.error as e:
+					if e.error == errno.EPIPE:
+						print ('Connection closed')
+						return 1
+					else:
+						print ('Error: ' + e)
+						return 1
 				needTok = 1
 				break
 		else:
-			conn.send(str.encode('Invalid Login'))
+			try:
+				conn.send(str.encode('Invalid Login'))
+			except socket.error as e:
+				if e.error == errno.EPIPE:
+					print ('Connection closed')
+					return 1
+				else:
+					print ('Error: ' + e)
+					return 1			
 			print ('sent failed message')
 
 	if needTok == 1:
@@ -131,6 +170,13 @@ def threaded_client(conn, clientID):
 			file.write (data)
 		except ConnectionResetError:
 			break
+		except socket.error as e:
+			if e.error == errno.EPIPE:
+				print ('Connection closed')
+				return 1
+			else:
+				print ('Error: ' + e)
+				return 1			
 		if not data:
 			break
 	file.close()
@@ -166,10 +212,6 @@ while (1):
 	#start_new_thread(authUser,(conn,)) enable this again when complete
 	cld = os.fork()
 	if cld == 0:
-		try:
-			authUser(conn)
-		except socket.error as e:
-			if e.error == errno.EPIPE:
-				print ('Connection closed')
-			else:
-				print ('Error: ' + e)
+		suc = authUser(conn)
+		if suc == 1
+			print ('Operation failed')
