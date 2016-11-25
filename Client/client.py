@@ -44,6 +44,9 @@ def createConnection(flag): #create connection to client Ryan
 #################################################################
 def login(sock): #login to the server
 
+    if not os.path.exists(r'/UserCreds/'):
+	os.makedirs(r'/UserCreds/')
+
     #Check file user creds already stored, if not create a file file to store them
     try:
         authCheck = open ("/UserCreds/creds.txt", "r+")
@@ -55,8 +58,8 @@ def login(sock): #login to the server
 	#repeat until successful login
     	while True:
             #get login info from user
-	    username = raw_input('Enter your username: ')
-	    password = raw_input('Enter your password: ')
+	    username = raw_input('\tEnter your username: ')
+	    password = raw_input('\tEnter your password: ')
 	    tok = 'none'
 	    #send login info to server (wait times are so they don't combine)
 	    sock.send(username)
@@ -97,28 +100,28 @@ def login(sock): #login to the server
 	    #repeat until successful login
 	    while True:
 		#ask user for login info
-		username = raw_input('Enter your username: ')
-		password = raw_input('Enter your password: ')
+		username = raw_input('\tEnter your username: ')
+		password = raw_input('\tEnter your password: ')
 		tok = 'none'
 		sock.send(username)
 		time.sleep(1)
 		sock.send(password)
 		time.sleep(1)
 		sock.send(tok)
-		print 'waiting for server response'
+		print '\twaiting for server response'
 		response = sock.recv(1024).decode('utf-8')
-		print 'got response'
+		print '\tgot response'
 		if response == 'welcome':
-			print 'accepted'
+			print '\taccepted'
 			authCheck.write(username + '\n')
 			authCheck.write(password + '\n')
-			print 'waiting for token'
+			print '\twaiting for token'
 			tok = sock.recv(1024).decode('utf-8')
-			print 'got token'
+			print '\tgot token'
 			authCheck.write(tok + '\n')
 			break
 		else:
-			print 'Login failed, please try again'
+			print '\tLogin failed, please try again'
 
 #################################################################
 #                          DISPATCH                             #
@@ -163,11 +166,11 @@ if __name__ == "__main__":
 
     # login(sock)
 
-    # Initial Execute and Dispatch 
+    # Initial Execute and Dispatch
     collector.execute(0, None)
     dispatch(sock)
 
-    # sock.close()
+    sock.close()
 
 
     # NOTE: need to modify to watch for certain messages(signals) sent from the server
@@ -179,8 +182,15 @@ if __name__ == "__main__":
     #	    signal to this process that "speeds up" the collection and sends it off.
     while True:
         #time.sleep(300)
-        time.sleep(30)
+        #time.sleep(30)
+	timer = 1
+	while (timer <= 5):
+		print '\tWaiting for ' + str(timer)
+		time.sleep(1)
+		timer += 1
         print 'collecting...'
         collector.execute(0, None)
         print 'sending...'
+	sock = createConnection(1)
         dispatch(sock)
+	sock.close()
