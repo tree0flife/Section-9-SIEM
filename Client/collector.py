@@ -44,8 +44,10 @@ def openfile(name, rasp):
 #################################################################
 def cleanup(pathdir, rasp):
 
-    record = '%s__%s__.txt' % (rasp.user, time.strftime('%d-%m-%Y_%H-%M-%S'))
+    record = 'timestamp.txt'
+    #record = '%s__%s__.txt' % (rasp.user, time.strftime('%d-%m-%Y_%H-%M-%S'))
     r = open(record, 'w')
+    r.write(time.strftime('%d-%m-%Y_%H-%M-%S'))
     r.close()
 
     os.chdir(pathdir)
