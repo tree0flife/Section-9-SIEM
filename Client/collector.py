@@ -4,71 +4,64 @@ import os
 import re
 import time
 import zipfile
+import signal
 import shutil
 import getpass
-#from pyutmp import UtmpFile
 
 #------------------------Class Definition------------------------#
 class globs(object):
 
     def __init__(self):
-        #self.user = getpass.getuser()
-	self.user = os.getlogin()
-        self.path = None
-	self.package = 0
-        self.setup(self.user, self.path)
-
-    def setup(self, user, path):
-	self.path = '/home/%s/.bash_history' % self.user
+        self.user = os.getlogin()
+        self.pathdir = None 
+        self.bashpath = '/home/%s/.bash_history' % self.user 
+        self.package = 0
 
 #################################################################
-# 		            Open file                           #
+#                            OPEN FILE                          #
 #################################################################
 def openfile(name, rasp):
     output_file = open(name, 'w')
     if name == 'apt-hist.log':
         path = '/var/log/apt/history.log'
     elif name == 'bashhist.log':
-        path = rasp.path
+        path = rasp.bashpath
     else:
         path = '/var/log/%s' % name
-
     with open(path, 'r') as f:
         for line in f:
             output_file.write(line)
+
     output_file.close()
     f.close()
 
 #################################################################
-# 		     Begin Zipping and Cleanup			#
+#                            CLEANUP                            #
 #################################################################
-def cleanup(pathdir, rasp):
-
-    record = 'timestamp.txt'
-    #record = '%s__%s__.txt' % (rasp.user, time.strftime('%d-%m-%Y_%H-%M-%S'))
+def cleanup(rasp):
+    record = 'USERINFO'
     r = open(record, 'w')
+    r.write(rasp.user)
     r.write(time.strftime('%d-%m-%Y_%H-%M-%S'))
     r.close()
 
-    os.chdir(pathdir)
+    os.chdir(rasp.pathdir)
 
-    zip_name = zipfile.ZipFile("/UserCreds/package_" + str(rasp.package) + ".zip", "w", zipfile.ZIP_DEFLATED)
-    dirlist = os.listdir(pathdir + '/temp')
+    zip_name = zipfile.ZipFile('package_' + str(rasp.package) + '.zip', 'w', zipfile.ZIP_DEFLATED)
+    dirlist = os.listdir(rasp.pathdir + '/temp')
     for list in dirlist:
-        get_file = os.path.join(pathdir + '/temp/', list)
+        get_file = os.path.join(rasp.pathdir + '/temp/', list)
         zip_name.write(get_file, list)
 
     zip_name.close()
-    shutil.rmtree(pathdir + '/temp')
+    shutil.rmtree(rasp.pathdir + '/temp')
 
 #################################################################
-#			    GIFT WRAP				#
+#                            GIFT WRAP                          #
 #################################################################
 def giftwrap(pathdir):
-
     os.chdir(pathdir.strip('deliverables'))
-
-    zip_name = zipfile.ZipFile("/UserCreds/final_package.zip", "w", zipfile.ZIP_DEFLATED)
+    zip_name = zipfile.ZipFile('final_package_' + time.strftime('%d-%m-%Y_%H-%M-%S') + '.zip', 'w', zipfile.ZIP_DEFLATED)
     dirlist = os.listdir(pathdir)
     for list in dirlist:
         get_file = os.path.join(pathdir, list)
@@ -77,53 +70,61 @@ def giftwrap(pathdir):
     zip_name.close()
     shutil.rmtree(pathdir)
 
+#################################################################
+#                               RUN                             #
+#################################################################
+def run(rasp):
+    print 'Working...'
+    os.mkdir(rasp.pathdir + '/temp', 0700)
+    os.chdir(rasp.pathdir + '/temp')
+    openfile('dpkg.log', None)
+    openfile('auth.log', None)
+    openfile('kern.log', None)
+    openfile('syslog', None)
+    openfile('apt-hist.log', None)
+    openfile('bashhist.log', rasp)
+    cleanup(rasp)
+    print 'Done..'
 
 #################################################################
-#			   RUN					#
+#                        SIGNAL HANDLER                         #
 #################################################################
-def run(rasp, pathdir):
-	print "Working..."
-	os.mkdir(pathdir + '/temp', 0700)
-	os.chdir(pathdir + '/temp')
+def signal_handler(signal, frame):
+    pathdir = '/root/siem9/deliverables' 
 
+    if pathdir.split('/')[-1:] == 'deliverables':
+        os.chdir(pathdir.split('/')[-1:])
+        execute(0, None)
+    else:
+        giftwrap(pathdir)
 
-	openfile('dpkg.log', None)
-	openfile('auth.log', None)
-	openfile('kern.log', None)
-	openfile('syslog', None)
-	openfile('apt-hist.log', None)
-	openfile('bashhist.log', rasp)
-
-	cleanup(pathdir, rasp)
-	print "Done.."
+    exit()
 
 #################################################################
-#			   System Logs			        #
-# 			    ( MAIN )                            #
+#                            EXECUTE                            #
 #################################################################
 def execute(idle, q):
 
-    rasp = globs()
-    if not os.path.exists(r'/UserCreds/'):
-	os.makedirs(r'/UserCreds/', 700)
-    if not os.path.exists(r'/UserCreds/deliverables/'):
-	os.makedirs(r'/UserCreds/deliverables/', 700)
-    pathdir = '/UserCreds/deliverables'
-    #os.mkdir(pathdir, 0700)
+    signal.signal(signal.SIGTERM, signal_handler)
 
-    # If idle is 1, the client could not establish a connection
-    # The collector will continuously run until its notified a connection has been made
+    rasp = globs()
+    rasp.pathdir = '/root/siem9/deliverables'
+
+    if os.path.exists(rasp.pathdir) != True:
+        os.makedirs(rasp.pathdir, 0700)
+
     if idle == 1:
-	run(rasp, pathdir)
-	timer = 0
-	while q.empty() == True:
-	    time.sleep(1)
-	    timer += 1
-	    if timer == 300:
-		timer = 0
-		rasp.package += 1
-		run(rasp, pathdir)
-	giftwrap(pathdir)
+        run(rasp)
+        timer = 0
+        while q.empty() == True:
+            time.sleep(1)
+            timer += 1
+            if timer == 300:
+                timer = 0
+                rasp.package += 1
+                run(rasp)
+
+        giftwrap(rasp.pathdir)
     else:
-	run(rasp, pathdir)
-	giftwrap(pathdir)
+        run(rasp)
+        giftwrap(rasp.pathdir)
