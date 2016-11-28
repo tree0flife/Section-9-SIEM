@@ -1,6 +1,25 @@
-{% if user.is_authenticated %}
-    Hi {{ user.username }}!
-    <a href="{% url 'logout' %}">logout</a>
-{% else %}
-    <a href="{% url 'login' %}">login</a>
-{% endif %}
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+Homepage(No Auth)
+<br>
+Login:
+User,
+password,
+(requires authentication view0
+<br>
+register: link to register
+<br>
+userlist
+<br>
+graph
+<br>
+settings
+<br>
+about the service: link to about the service
+<br>
+About us: link to about_us.html
+
+{% endblock %}

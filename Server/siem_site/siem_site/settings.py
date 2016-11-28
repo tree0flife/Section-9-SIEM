@@ -25,13 +25,15 @@ SECRET_KEY = 'e+p7^gttyd+$!&c#3iwf7%@!n#iqb7qm67%fgb6(^=wg*z89=9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['24.150.80.188', '10.16.12.59']
+ALLOWED_HOSTS = ['127.0.0.1','24.150.80.188', '10.16.12.59','192.168.2.17']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-	'register',
+    'graph',
+    'graphos',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -119,7 +121,29 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-
-LOGIN_REDIRECT_URL = 'homepage'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+
+
+Login_URL = 'login'
+LOGIN_REDIRECT_URL ='index'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+#Account related
+ACCOUNT_ACTIVATION_DAYS = 7
+PASSWORD_RESET_TIMEOUT_DAYS = 3
+#Email related
+#REGISTRATION_SALT = <put string here if we want salted HMAC links>
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER ='tree0ftest@gmail.com'
+EMAIL_HOST_PASSWORD = '9bG!WcAFJa@smxs'
+
+#FILE_UPLOAD_HANDLERS
+
+
+
