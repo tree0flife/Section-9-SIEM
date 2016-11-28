@@ -1,6 +1,8 @@
 #!/bin/bash
 
-spam=`pidof python client.py`
+# put the entire command you used to run the client between ""
+spam=`pgrep -f "python client.py"`
+# PID=`pgrep -f "/usr/bin/python /root/siem9/client.py"`
 
 pid2=`echo $spam | cut -d ' ' -f1`
 pid1=`echo $spam | cut -d ' ' -f2`
