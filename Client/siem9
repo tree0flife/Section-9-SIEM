@@ -7,7 +7,7 @@ case "$1" in
         # if possible try to get pid of client.py for shutdown #
         # and store it in $PID
         #
-        # /root/siem9/client.py
+        /usr/bin/python /root/siem9/client.py
 
         touch /var/lock/subsys/siem9
         ;;
@@ -16,8 +16,18 @@ case "$1" in
         # send a signal to pid of client.py. The client will have a #
         # signal handler. That will stop sending and finish zipping #
         # all logs and keep them on disk for the next startup.      #
-        #
-        # kill $PID
+
+        # may need to change this so it can match 
+        PID=`pgrep -f "/usr/bin/python /root/siem9/client.py"`
+
+        cli2=`echo $PID | cut -d ' ' -f1`
+        cli1=`echo $PID | cut -d ' ' -f2`
+
+        if [ "$cli2" -gt "$cli1" ]; then
+            kill -s SIGTERM $cli2
+        fi
+
+        kill -s SIGTERM $cli1
 
         rm -f /var/lock/subsys/siem9
         ;;
