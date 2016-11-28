@@ -3,28 +3,16 @@ import errno
 import sys
 import os
 import random
-#from _thread import *
-#from multiprocessing import Pool
 from zipfile import *
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-port = 3000
-host = ''
-
-try:
-	s.bind((host, port))
-except socket.error as e:
-	print(str(e))
-
-s.listen(100)
-print('Listening for connections:')
-
+########## Authenticate the user before trying to recieve a file ##########
 def authUser(conn, addr):
-	authCheck = open ("/home/matrix/testing/Server/users.txt", "r+")
+	authCheck = open ("/home/debo/SoftEng/Section-9-SIEM/Server/users.txt", "r+")
 	confUser = 0
+	tryCount = 0
 
-	while confUser == 0:
+	#Try to authenticate the user 5 times
+	while tryCount < 5 and confUser == 0:
 		authCheck.seek(0, 0)
 		cont = 0
 		counter = 0
@@ -32,8 +20,8 @@ def authUser(conn, addr):
 		token = 0
 		redo = 0
 		needTok = 0
-		#print ('Getting user info:')
 
+		#Try to recieve login information from the client
 		try:
 			data = conn.recv(1024)
 			clientID = data.decode('utf-8')
@@ -41,42 +29,37 @@ def authUser(conn, addr):
 			clientPWD = data.decode('utf-8')
 			data = conn.recv(1024)
 			clientTOK = data.decode('utf-8')
+		#Detect if client breaks or loses connection
 		except socket.error as e:
+			#Output if client closed the connection
 			if e.errno == errno.EPIPE:
 				print ('\tConnection closed at ' + addr[0])
+				#kill the current child process
 				os._exit(0)
+			#Output if another error has occured
 			else:
 				print ('\tError: ' + e + ' at ' + addr[0])
 				os._exit(0)
-		#print ('checking info')
+
 		for userInfo in authCheck:
-			#print (userInfo)
 			userPasses += 1
 			userInfo = userInfo.rstrip('\n')
 			if counter == 0:
-			#	print (clientID)
 				if clientID == userInfo:
-					#print ('\tUsername: pass')
 					cont = 1
 					counter = 1
 				else:
-					#print ('\tUsername: fail')
 					cont = 0
 					counter = 1
 			elif counter == 1:
-			#	print (clientPWD)
 				if clientPWD == userInfo and cont == 1:
-					#print ('\tPassword: pass')
 					cont = 2
 					counter = 2
 				else:
-					#print ('\tPassword: fail')
 					cont = 0
 					counter = 2
 			elif counter == 2:
-			#	print (clientTOK)
 				if clientTOK == userInfo and cont == 2:
-					#print ('\tToken: match')
 					try:
 						conn.send(str.encode('welcome'))
 					except socket.error as e:
@@ -89,7 +72,6 @@ def authUser(conn, addr):
 					confUser = 1
 					break
 				elif clientTOK == 'none' and cont == 2:
-					#print ('\tToken: generating')
 					try:
 						conn.send(str.encode('welcome'))
 						token = random.randrange(100000, 999999)
@@ -105,17 +87,14 @@ def authUser(conn, addr):
 					newTok = 1
 					break
 				else:
-					#print ('\tToken: fail')
 					cont = 0
 					counter = 0
 
 		if confUser == 1:
 			break
 
-		#print ('got here')
 		if (userPasses % 2) == 0 and (userPasses % 3) != 0:
 			if clientTOK == 'none':
-				#print ('empty token')
 				try:
 					conn.send(str.encode('welcome'))
 					token = random.randrange(100000, 999999)
@@ -139,37 +118,38 @@ def authUser(conn, addr):
 				else:
 					print ('\tError: ' + e + ' at ' + addr[0])
 					os._exit(0)
-			#print ('sent failed message')
+
+		tryCount += 1
 
 	if needTok == 1:
 		authCheck.seek(0, 0)
-		#print (str(userPasses))
 		while redo < userPasses:
 			authCheck.readline()
 			redo += 1
 		authCheck.truncate()
-		#authCheck.seek(userPasses, 0)
-		#print (authCheck.readline().rstrip('\n') + " TEST")
-		#authCheck.seek(-1, 1)
-		#print ("This is the token: " + str(token))
 		authCheck.write(str(token) + '\n')
-	threaded_client(conn, clientID, addr)
+	recieveZipFile(conn, clientID, addr)
 
-def threaded_client(conn, clientID, addr):
-	#conn.send(str.encode("Login Succeeded"))
+########## Reccieve, store, extract the zip files containing the log files ##########
+def recieveZipFile(conn, clientID, addr):
+	#Create the storage path for the users if the folder does not yet exist
 	userPath = r'/UserStorage/'
 	if not os.path.exists(userPath):
+		#set the permisions so only root can access the folder
 		os.makedirs(userPath, mode = 700)
-	file = open("/UserStorage/" + clientID + ".zip", "wb")
-	#zipArch = ZipFile ("/UserStorage/" + clientID + ".zip", "w")
 
-	#with ZipFile('/UserStorage/' + clientID + '.zip', 'w') as zipArch:
+	#Create a zip file including the client's ID
+	file = open("/UserStorage/" + clientID + ".zip", "wb")
+
+	#Keep recieving data from the client and copying it into the create zip file
 	while True:
 		try:
 			data = conn.recv(1024)
 			file.write (data)
+		#stop it the client has no more data to send
 		except ConnectionResetError:
 			break
+		#quit if the connection ends abruptly
 		except socket.error as e:
 			if e.errno == errno.EPIPE:
 				print ('\tConnection closed as ' + clientID + ' at ' + addr[0])
@@ -177,35 +157,58 @@ def threaded_client(conn, clientID, addr):
 			else:
 				print ('\tError: ' + e + ' as ' + clientID + ' at ' + addr[0])
 				os._exit(0)
+		#stop at the end of the file
 		if not data:
 			break
+	#close and save the file
 	file.close()
 
+
+	#check if the storage for the users exists, if not create it as root only
 	currentUserPath = r'/UserStorage/' + clientID + '/'
 	if not os.path.exists(currentUserPath):
-		os.makedirs(currentUserPath)
+		os.makedirs(currentUserPath, mode = 700)
 
+	#try and open the extract the zip file tho the client's folder
 	try:
 		zipArch = ZipFile ("/UserStorage/" + clientID + ".zip", "r")
 		zipArch.extractall("/UserStorage/" + clientID + "/")
 		zipArch.close()
+	#catch if the zip file is invalid
 	except BadZipFile:
 		print ('\tError extracting zip file as ' + clientID + ' at ' + addr[0])
 		conn.close()
 		os._exit(0)
 
+	#display everything completed successfully
 	print ('\tCompleted successfuly as ' + clientID + ' at ' + addr[0] + '\n')
 	conn.close()
 	os._exit(0)
 
-while (1):
+#main part of the program
+if __name__ == '__main__':
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	port = 3000
+	host = ''
 
-	conn, addr = s.accept()
-	print ('Connected to: '+addr[0]+':'+str(addr[1]))
+	try:
+		s.bind((host, port))
+	except socket.error as e:
+		print(str(e))
 
-	#start_new_thread(authUser,(conn,)) enable this again when complete
-	cld = os.fork()
-	if cld == 0:
-		suc = authUser(conn, addr)
-		if suc == 1:
-			print ('\tOperation failed at ' + addr[0] + '\n')
+	s.listen(100)
+	print('Listening for connections:')
+
+	while (1):
+
+		#wait until a connection is recieved
+		conn, addr = s.accept()
+		print ('Connected to: '+addr[0]+':'+str(addr[1]))
+
+		#create a child which will 
+		cld = os.fork()
+		if cld == 0:
+			suc = authUser(conn, addr)
+			if suc == 1:
+				print ('\tOperation failed at ' + addr[0] + '\n')
