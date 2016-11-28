@@ -5,9 +5,7 @@ Things to work on:
 
 Ryan
   - Get timestamps and name accordingly
-  - Error checking
-    - If file is a proper zip file
-  - [ CLIENT-SIDE ]Make sure the authentication is enrypted over the network
+  - Parsing, parsing, and even more parsing
 
 Stefan
   - Implement tear.py into the main program (using Scapy)
@@ -32,3 +30,6 @@ Imad
   - making sure it is robust (strictly only accept compressed data - zip files of any format + other requirements) 
 - navigation between webpages
   - links on all the webpages
+
+Extra things if we have time
+  - encrypt authentication and data sent over network
