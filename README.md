@@ -11,9 +11,7 @@ Ryan
 
 Stefan
   - Implement tear.py into the main program (using Scapy)
-  - Error Handling
-    - connection cut off during dispatch()
-    - need to write signal handler in client.py
+  - *No more errors. Will handle any others if they creep up.*
 
 Sylvain
   X configure python environment on server
