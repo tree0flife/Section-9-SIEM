@@ -3,9 +3,20 @@ import errno
 import sys
 import os
 import random
+import fnmatch
 from zipfile import *
 
-########## Authenticate the user before trying to recieve a file ##########
+def makeBackup (filename):
+	while (1):
+		backupCounter = 0
+		if os.path.isfile('/UserStorage/' + clientID + '/' + filename + '.bak' + backupCounter):
+			backupCounter += 1
+		else:
+			os.rename('/UserStorage/' + clientID + '/' + filename, '/UserStorage/' + clientID + '/' + filename + '.bak' + backupCounter)
+			break
+
+
+########## Authenticate the user before trying to recieve a file :) ##########
 def authUser(conn, addr):
 	authCheck = open ("/home/debo/SoftEng/Section-9-SIEM/Server/users.txt", "r+")
 	confUser = 0
@@ -169,10 +180,20 @@ def recieveZipFile(conn, clientID, addr):
 	if not os.path.exists(currentUserPath):
 		os.makedirs(currentUserPath, mode = 700)
 
+	for filename in os.listdir('/UserStorage/' + clientID + '/'):
+		if fnmatch.fnmatch(filename, 'bashhist*.log'):
+			makeBackup(filename)
+		if fnmatch.fnmatch(filename, 'timestamp*.txt'):
+			makeBackup(filename)
+
 	#try and open the extract the zip file tho the client's folder
 	try:
 		zipArch = ZipFile ("/UserStorage/" + clientID + ".zip", "r")
 		zipArch.extractall("/UserStorage/" + clientID + "/")
+		timestamp = open ("/UserStorage/" + clientID + "/timestamp.txt")
+		coltime = timestamp.read()
+		if os.path.isfile("/UserStorage/" + clientID + "/bashhist.log"):
+			os.rename ("/UserStorage/" + clientID + "/bashhist.log", "/UserStorage/" + clientID + "/bashhist." + coltime + ".log")
 		zipArch.close()
 	#catch if the zip file is invalid
 	except BadZipFile:
