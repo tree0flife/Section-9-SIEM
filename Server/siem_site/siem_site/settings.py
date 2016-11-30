@@ -27,19 +27,20 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','24.150.80.188', '10.16.12.59','192.168.2.17']
 
-
 # Application definition
 
 INSTALLED_APPS = [
-    'graph',
-    'graphos',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'testsomeshitforgeorge',
+    'stats',
+    'graphos',
+    'core',
+    'client',
 ]
 
 MIDDLEWARE = [

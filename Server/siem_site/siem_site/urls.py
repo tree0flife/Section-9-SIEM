@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from django.contrib.auth import views as auth_views
-from django.contrib.auth import views
+#from django.contrib.auth import views
 from django.views.generic.base import TemplateView
 
 
@@ -28,10 +28,12 @@ urlpatterns = [
 
     url(r'^$', TemplateView.as_view(template_name='homepage.html'), name='index'),
     #url(r'^register/', include('register.urls'), name='register'),
-    #url(r'^login/$', views.login, {'template_name': 'login.html'}, name='login'),
+    #url(r'^login/$', methods.login, {'template_name': 'login.html'}, name='login'),
 
     url(r'^login/$', auth_views.login, name='login'),
     #url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
 
     url(r'^accounts/', include('registration.backends.hmac.urls')),
+
+    url(r'^stats/', include('core.urls')),
 ]
