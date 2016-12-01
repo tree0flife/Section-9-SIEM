@@ -21,7 +21,7 @@ def line_chart_maker_model(queryset,fields):
 #def bar_chart_maker_model(self,queryset,fields):
 #    return
 
-def bar_chart_maker_simple(queryset,fields):
+def bar_chart_maker_simple(queryset):
     data_source = SimpleDataSource(queryset)
     bar_chart = BarChart(data_source)
     return {'bar_chart': bar_chart}

@@ -20,16 +20,18 @@ def bash_history_user(user):
             dict[item] = 1
 
     #make simple querryset for graphos
-    queryset = [[axis]]
+    queryset = []
+    queryset.append(list(axis))
     for x, y in dict.items():
         line = x, y
+        list(line)
         queryset.append(line)
 
 # #remove dups
 # d = set(a)
 # print(d)
 # #{1, 2, 3, 4}
-    return bar_chart_maker_simple(queryset=queryset, fields=axis)
+    return bar_chart_maker_simple(queryset=queryset)
 
 def bash_history_all():
 #display every usery user X axis, Y axis = total flag count
