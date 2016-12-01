@@ -82,11 +82,11 @@ if __name__ == '__main__':
 		#parse then move file file to permanent folder (done)
 		#use multiprocessing (done)
 
-	count = 0
-	while (count < 1):
-	#while (1):
-		print(time.strftime('%d-%m-%Y_%H-%M-%S'))
-		count += 1
+	#count = 0
+	#while (count < 1):
+	while (1):
+		#print(time.strftime('%d-%m-%Y_%H-%M-%S'))
+		#count += 1
 		for folder in os.listdir("/UserStorage/"):
 			if os.path.isdir("/UserStorage/" + folder):
 				for filename in os.listdir("/UserStorage/" + folder + "/"):
