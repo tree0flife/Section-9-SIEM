@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     {% load static %}
-    <script src="{% static 'js/flot/jquery.js' %}" ></script>
-    <script src="{% static 'js/flot/jquery.flot.js' %}" ></script>
+    <script src="{% static '/js/flot/jquery.js' %}" ></script>
+    <script src="{% static '/js/flot/jquery.flot.js' %}" ></script>
 
    <!-- <script  src="{% static 'js/flot/jquery.js' %}"></script>
     <script  src="{% static 'js/flot/jquery.flot.categories.js'%}" ></script>
@@ -12,9 +12,11 @@
     <title>Title</title>
 </head>
 <body>
-
+{% block content %}
 Hi
 {{ bar_chart.as_html }}
+{% endblock %}
+
 </body>
 </html>
 
