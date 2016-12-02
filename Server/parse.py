@@ -140,7 +140,7 @@ if __name__ == '__main__':
 								fileString = "/UserStorage/" + folder + "/" + filename
 								backupStart = fileString.find (".bak")
 								backupNumber = int(fileString[backupStart + 4:])
-								backupNumberDigits = len(fileString) - 55 #add . (or other delimeter) before time stamp
+								backupNumberDigits = len(fileString) - 54
 								if backupNumber == 0 and not os.path.isfile(fileString[:-5]):
 									os.rename(fileString, fileString[:-5])
 								elif backupNumber > 0  and not os.path.isfile(fileString[:-(4 + backupNumberDigits)]):
