@@ -4,8 +4,8 @@ SIEM for Software Engineering
 Things to work on:
 
 Ryan
-  - Get timestamps and name accordingly
-  - Parsing, parsing, and even more parsing
+  - Database working correctly
+  - Pcap parsing
 
 Stefan
   - Implement tear.py into the main program (using Scapy)
