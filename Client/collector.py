@@ -45,8 +45,8 @@ def openfile(name, rasp):
 def cleanup(rasp):
     record = 'USERINFO'
     r = open(record, 'w')
+    r.write(time.strftime('%d-%m-%Y_%H-%M-%S') + "\n")
     r.write(rasp.user)
-    r.write(time.strftime('%d-%m-%Y_%H-%M-%S'))
     r.close()
 
     os.chdir(rasp.pathdir)

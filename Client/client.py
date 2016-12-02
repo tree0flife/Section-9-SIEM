@@ -3,6 +3,7 @@
 # TARGET IP:PORT    24.150.80.188 : 3000
 
 import signal
+import re
 import socket
 import sys
 import time
@@ -22,8 +23,8 @@ def createConnection(flag): #create connection to client Ryan
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while True:
         try:
-            sock.connect(("localhost", 9999)) # for testing locally
-            #sock.connect(('24.150.80.188', 3000))
+            #sock.connect(("localhost", 9999)) # for testing locally
+            sock.connect(('24.150.80.188', 3000))
             login(sock)
             print '[+] Connected'
             return sock
@@ -88,13 +89,17 @@ def login(sock): #login to the server
         clientPWD = authCheck.readline().rstrip('\n')
         clientTOK = authCheck.readline().rstrip('\n')
         sock.send(clientID)
+	print 'sent id'
         time.sleep(1)
         sock.send(clientPWD)
+	print 'sent pass'
         time.sleep(1)
         sock.send(clientTOK)
-        #login login status message from server
+	print 'sent token'
+        #login status message from server
         response = sock.recv(1024).decode('utf-8')
         #ask for user to enter login info on fail
+	print 'got response'
         if response != 'welcome':
             print '[-] Login: Failed, please try again'
             authCheck.close()
@@ -126,7 +131,7 @@ def login(sock): #login to the server
                 else:
                     print '\tLogin failed, please try again'
 
-
+    authCheck.close()
 
 #################################################################
 #                     CONNECTION HANDLER                        #
