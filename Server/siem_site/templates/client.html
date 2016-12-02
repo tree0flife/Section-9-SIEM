@@ -5,7 +5,7 @@
 {% block content %}
     <font size="5">Add a client</font>
     <hr>
-    <form role="form">
+    <form role="form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
 

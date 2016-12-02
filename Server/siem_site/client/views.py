@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import ClientForm
 from django.views.generic import View
+
 
 class ClientView(View):
     form_class = ClientForm
@@ -14,11 +15,9 @@ class ClientView(View):
         form = self.form_class(request.POST)
 
         if form.is_valid():
-            user = form.save(commit=False)
+            # user = form.save(commit=False)
 
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user.set_password(password)
-            user.save()
 
-            return render(request, self.template_name, {'form': form})
+            return redirect("{% url 'index' %}")
