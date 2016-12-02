@@ -2,8 +2,41 @@ import os
 import fnmatch
 import time
 
+def editFile(filename, folder, endOfFile):
+	oldLines = []
+	curLine = 0
+	with open("/UserStorage/" + folder + "/Parsing" + filename, "r") as oldFile
+		for line in oldFile:
+			oldLines.append(line)
+
+	newFile = open("/UserStorage/" + folder + "/Parsing" + filename, "w")
+	numOfLines = sum(1 for line in open("/UserStorage/" + folder + "/Parsing" + filename))
+	for line in oldLines:
+		if curLine == 25:
+			newFile.write(line)
+		if line == endOfFle[curLine] and curLines < 25:
+			curLine += 1
+		elif curLines < 25:
+			curLine == 0
+	newFile.close()
+
+########## Keep the last 25 lines of the previously parsed file ##########
+def writeEndOfFile(filename, folder, endOfFile):
+	endOFFile = []
+	count = 0
+	numOfLines = sum(1 for line in open("/UserStorage/" + folder + "/Parsing" + filename))
+	
+	with open("/UserStorage/" + folder + "/Parsing" + filename, "r") as file:
+		for line in file:
+			if count > numOfLines - 25:
+				endOfFile.append(line)
+				
+	return endOfFile
+
 ########## Parse the bash files ##########
-def runBash (filename, folder):
+def runBash (filename, folder, endOfFile):
+	editFile(filename, folder, endOfFile)
+	
 	#Formating for clarity in output
 	print ("\nUser: " + folder)
 	print ("File: " + filename)
@@ -39,6 +72,8 @@ def runBash (filename, folder):
 				#copy info to a file
 				saveLocally.write(line)
 	fileToParse.close()
+	
+	endOfFile = writeEndOfFile(filename, folder, endOfFile)
 
 	#Copy the saved data to the database if there is extra data to send and a connection
 	if os.stat("/UserStorage/" + folder + "/databaseSaveBash").st_size == 0:
@@ -52,7 +87,11 @@ def runBash (filename, folder):
 			os.remove("/UserStorage/" + folder + "/databaseSaveBash")
 		elif database == 0:
 			saveLocally.close()
+			
+	moveFile(filename, folder, endOfFile)
 
+########## Move the file to a permanent location ##########
+def moveFile(filename, folder, endOfFile):
 	#Create Storage folder if it does not already exist
 	storagePath = r'/PermanentStorage/'
 	if not os.path.exists(storagePath):
@@ -72,6 +111,7 @@ def runBash (filename, folder):
 		print ("Error moving file")
 
 	print("File successfully parsed: " + filename)
+	return endOfFile
 
 if __name__ == '__main__':
 	#constantly running features:
@@ -84,6 +124,8 @@ if __name__ == '__main__':
 
 	#count = 0
 	#while (count < 1):
+	endOfFile = []
+	
 	while (1):
 		#print(time.strftime('%d-%m-%Y_%H-%M-%S'))
 		#count += 1
@@ -98,18 +140,18 @@ if __name__ == '__main__':
 								fileString = "/UserStorage/" + folder + "/" + filename
 								backupStart = fileString.find (".bak")
 								backupNumber = int(fileString[backupStart + 4:])
-								backupNumberDigits = len(fileString) - 54
+								backupNumberDigits = len(fileString) - 55 #add . (or other delimeter) before time stamp
 								if backupNumber == 0 and not os.path.isfile(fileString[:-5]):
 									os.rename(fileString, fileString[:-5])
 								elif backupNumber > 0  and not os.path.isfile(fileString[:-(4 + backupNumberDigits)]):
 									os.rename(fileString, fileString[:-(backupNumberDigits)] + str(backupNumber-1))
 							else:
-								if fnmatch.fnmatch (filename, "bashhist.log"):
+								if fnmatch.fnmatch (filename, "bashhist*.log"):
 									os.rename ("/UserStorage/" + folder + "/" + filename, "/UserStorage/" + folder + "/Parsing" + filename)
 									child = os.fork()
 									if child == 0:
 										if fnmatch.fnmatch("/UserStorage/" + folder + "/Parsing" + filename, "/UserStorage/" + folder + "/" + "Parsingbashhist*.log"):
-											runBash(filename, folder)
+											endOfFile = runBash(filename, folder, endOfFile)
 										os._exit(0)
 						except FileNotFound:
 							print ("File " + filename + " was no longer found")
