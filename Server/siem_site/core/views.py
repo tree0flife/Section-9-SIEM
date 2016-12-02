@@ -5,7 +5,7 @@ from stats.methods.bash_history import *
 
 class view_bash_history_user(View):
     form_class = Bash_History_User_Form
-    template = 'test_graph.html'
+    template = 'bash_history_user.html'
 
     def get(self, request):
         form = self.form_class(None)
