@@ -74,6 +74,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'siem_site.wsgi.application'
 
 
+
+
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 

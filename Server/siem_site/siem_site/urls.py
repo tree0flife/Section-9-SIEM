@@ -35,5 +35,5 @@ urlpatterns = [
 
     url(r'^accounts/', include('registration.backends.hmac.urls')),
 
-    url(r'^stats/', include('core.urls')),
+    url(r'^core/', include('core.urls')),
 ]

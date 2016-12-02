@@ -1,17 +1,24 @@
 from django.shortcuts import render
+from django.views.generic import View
+from django.http import HttpResponseRedirect
+
+from .forms import *
 from stats.methods.bash_history import *
 
-# @TODO need to import the methods from other methods to post and then seperate
 
-
-def view_bash_history_user(request):
-    # @TODO take response and get user variable, make proper templates
-    user = 'user1'
+class view_bash_history_user(View):
+    form_class = Bash_History_User_Form
     template = 'test_graph.html'
-    bar_chart = bash_history_user(user)
-    context ={
-        'bar_chart': bar_chart,
-        }
 
-    return render(request, template_name=template, context=context )
+    def get(self, request):
+        form = self.form_class(None)
+        return render(request, self.template, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data['user']
+
+        chart = bash_history_user(user)
+        return render(request, template_name=self.template, context= {'chart': chart} )
 
