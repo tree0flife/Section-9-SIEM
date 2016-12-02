@@ -8,11 +8,15 @@ import signal
 import shutil
 import getpass
 
+login = "" 
+
 #------------------------Class Definition------------------------#
 class globs(object):
 
-    def __init__(self):
-        self.user = os.getlogin()
+    def __init__(self, user):
+        self.user = user 
+	global login
+	login = user
         self.pathdir = None 
         self.bashpath = '/home/%s/.bash_history' % self.user 
         self.package = 0
@@ -103,11 +107,11 @@ def signal_handler(signal, frame):
 #################################################################
 #                            EXECUTE                            #
 #################################################################
-def execute(idle, q):
+def execute(idle, q, user):
 
     signal.signal(signal.SIGTERM, signal_handler)
 
-    rasp = globs()
+    rasp = globs(user)
     rasp.pathdir = '/root/siem9/deliverables'
 
     if os.path.exists(rasp.pathdir) != True:

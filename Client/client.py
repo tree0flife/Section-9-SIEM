@@ -136,7 +136,7 @@ def conn_handle(sock):
     # connect. And have the child continuously collect log data
     if sock == -1:
 	q = Queue()
-	p = Process(target=collector.execute, args=(1, q))
+	p = Process(target=collector.execute, args=(1, q, str(sys.argv[1])))
 	p.start()
         sock = createConnection(1)
 	q.put('done')
@@ -198,7 +198,7 @@ if __name__ == "__main__":
     #	    signal to this process that "speeds up" the collection and sends it off.
     while True:
         print 'collecting...'
-        collector.execute(0, None)
+        collector.execute(0, None, str(sys.argv[1]))
         print 'sending...'
         while True:
             if (dispatch(sock) == 1):

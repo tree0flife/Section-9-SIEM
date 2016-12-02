@@ -1,34 +1,58 @@
 #!/bin/sh
-# /etc/init.d/siem9
+
+### BEGIN INIT INFO
+# Provides:	     siem9daemon
+# Required-Start:
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: siem9
+# Description:       siem9 start-stop-daemon - Debian
+### END INIT INFO
+
+NAME="siem9"
+APPDIR="/root/siem9/"
+APPBIN="/usr/bin/python"
+APPARGS="client.py $(who | awk '{print $1}')" #hack
+USER="root"
+GROUP="root"
+
+start() {
+    printf "Starting '$NAME'... "
+    start-stop-daemon --start --chuid "$USER:$GROUP" --background --make-pidfile --pidfile /var/run/$NAME.pid --chdir "$APPDIR" --exec "$APPBIN" -- $APPARGS || true
+    printf "done\n"
+}
+
+killtree() {
+    local _pid=$1
+    local _sig=${2-TERM}
+    for _child in $(ps -o pid --no-headers --ppid ${_pid}); do
+	killtree ${_child} ${_sig}
+    done
+    kill -${_sig} ${_pid}
+}
+
+stop() {
+    printf "Stopping '$NAME'... "
+    [ -z `cat /var/run/$NAME.pid 2>/dev/null` ] || \
+    while test -d /proc/$(cat /var/run/$NAME.pid); do
+	killtree $(cat /var/run/$NAME.pid) 15
+	sleep 0.5
+    done 
+    [ -z `cat /var/run/$NAME.pid 2>/dev/null` ] || rm /var/run/$NAME.pid
+    printf "done\n"
+}
 
 case "$1" in
     'start')
-        ################## execute client.py ################### 
-        # if possible try to get pid of client.py for shutdown #
-        # and store it in $PID
-        #
-        /usr/bin/python /root/siem9/client.py
-
+	start
         touch /var/lock/subsys/siem9
         ;;
     'stop')
-        ################## when system shuts down ################### 
-        # send a signal to pid of client.py. The client will have a #
-        # signal handler. That will stop sending and finish zipping #
-        # all logs and keep them on disk for the next startup.      #
-
-        # may need to change this so it can match 
-        PID=`pgrep -f "/usr/bin/python /root/siem9/client.py"`
-
-        cli2=`echo $PID | cut -d ' ' -f1`
-        cli1=`echo $PID | cut -d ' ' -f2`
-
-        if [ "$cli2" -gt "$cli1" ]; then
-            kill -s SIGTERM $cli2
-        fi
-
-        kill -s SIGTERM $cli1
-
+	stop
         rm -f /var/lock/subsys/siem9
         ;;
+    *)
+	echo "usage: service siem9 start|stop"
+	;;
 esac
