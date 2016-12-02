@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Account{% endblock %}
+
+{% block content %}
+    <font size="5">{{ request.user.username }}'s profile</font>
+    <hr>
+    Username: {{ request.user.username }}
+    <br><br>
+    Current email: {{ request.user.email }}
+    <br><br>
+    <a href="">Change password</a>
+{% endblock %}

@@ -20,8 +20,18 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^register/', include('register.urls'), name='register'),
-    url(r'^$', TemplateView.as_view(template_name='homepage.html'), name='homepage'),
+    url(r'^$', TemplateView.as_view(template_name='homepage.html'), name='index'),
+
+    url(r'^about_us/$', TemplateView.as_view(template_name='about_us.html'), name='about_us'),
+    url(r'^forgot_password/$', TemplateView.as_view(template_name='forgot_password.html'), name='forgot'),
+    url(r'^contact_us/$', TemplateView.as_view(template_name='contact_us.html'), name='contact_us'),
+
     url(r'^login/$', views.login, {'template_name': 'login.html'}, name='login'),
     url(r'^logout/$', views.logout, {'template_name': 'logout.html'}, name='logout'),
+    url(r'^accounts/', include('registration.backends.hmac.urls')),
+
+    url(r'^account/', TemplateView.as_view(template_name='account.html'), name='account'),
+
+    url(r'^client/', include('client.urls')),
+    url(r'^core/', include('core.urls')),
 ]

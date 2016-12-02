@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    {% load static %}
+    <script src="{% static '/js/flot/jquery.js' %}" type="text/javascript" ></script>
+    <script src="{% static '/js/flot/jquery.flot.js' %}" type="text/javascript" ></script>
+    <script src="{% static '/js/flot/jquery.flot.categories.js' %}"></script>
+    {{ chart.as_html }}
+    <meta charset="UTF-8">
+{% endblock %}
+
+{% block title %} Test {% endblock %}
+
+{% block content %}
+    Hi
+    {{ chart.as_html }}
+    <br><br>
+    {{ bar_chart.as_html }}
+    <br><br>
+    {{ bar_chart.as_html }}
+{% endblock %}
