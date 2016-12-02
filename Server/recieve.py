@@ -4,8 +4,36 @@ import sys
 import os
 import random
 import fnmatch
+import sqlite3
 from zipfile import *
 
+def checkDatabase (clientID, clientPWD, clientTOK, conn):
+	connection = sqlie3.connect('siem_site/test.sqlite3')
+	conn.execute('''CREATE TABLE auth(
+		user	TEXT	PRIMARY KEY	NOT NULL,
+		pass	TEXT	NOT NULL,
+		token	TEXT);''')
+	conn.execute("INSERT INTO auth (user, pass) VALUES (" + clientID + ", " + clientPWD + ")");
+	if clientTOK == 'none':
+		cursor = connection.execute("SELECT user, passw from auth where user = ? AND passw = ?", (clientID, clientPWD))
+		data = cursor.fetchone()
+		if len(data) == 0:
+			return 'Invalid Login'
+		else
+			token = random.randrange(100000, 999999)
+			conn.execute("DELETE FROM auth (user, pass) WHERE user=" + clientID + ")");
+			conn.execute("INSERT INTO auth (user, pass, pass) VALUES (" + clientID + ", " + clientPWD + ", " + token + ")");
+			conn.send(str.encode(str(token)))
+			return 'welcome'
+	else:
+		cursor = connection.execute("SELECT user, passw, token from auth where user = ? AND passw = ? AND token = ?", (clientID, clientPWD, clientTOK))
+		data = cursor.fetchone()
+		if len(data) == 0:
+			return 'Invalid Login'
+		else:
+			return 'welcome'
+
+########### Make a backup of the new file if a file already exists with the same name ###########
 def makeBackup (filename):
 	while (1):
 		backupCounter = 0
@@ -18,20 +46,11 @@ def makeBackup (filename):
 
 ########## Authenticate the user before trying to recieve a file :) ##########
 def authUser(conn, addr):
-	authCheck = open ("/home/debo/SoftEng/Section-9-SIEM/Server/users.txt", "r+")
-	confUser = 0
 	tryCount = 0
 
 	#Try to authenticate the user 5 times
-	while tryCount < 5 and confUser == 0:
-		authCheck.seek(0, 0)
-		cont = 0
-		counter = 0
-		userPasses = 0
-		token = 0
-		redo = 0
-		needTok = 0
-
+	while tryCount < 5:
+		tryCount += 1
 		#Try to recieve login information from the client
 		try:
 			data = conn.recv(1024)
@@ -52,6 +71,44 @@ def authUser(conn, addr):
 				print ('\tError: ' + e + ' at ' + addr[0])
 				os._exit(0)
 
+		result = checkDatabase (clientID, clientPWD, clientTOK, conn)
+		try:
+			conn.send(str.encode(result))
+			#Detect if client breaks or loses connection
+		except socket.error as e:
+			#Output if client closed the connection
+			if e.errno == errno.EPIPE:
+				print ('\tConnection closed at ' + addr[0])
+				#kill the current child process
+				os._exit(0)
+			#Output if another error has occured
+			else:
+				print ('\tError: ' + e + ' at ' + addr[0])
+				os._exit(0)
+		if success == 'welcome':
+			tryCount = 0
+			break
+
+	if tryCount == 0:
+		recieveZipFile(conn, clientID, addr)
+	else:
+		print ('Client at ' + addr[0] + ' failed to connect')
+			
+########## keeping so we can still test if database isnt working yet ###########
+def oldConnect ():
+	authCheck = open ("/home/debo/SoftEng/Section-9-SIEM/Server/users.txt", "r+")
+	confUser = 0
+	tryCount = 0
+
+	#Try to authenticate the user 5 times
+	while tryCount < 5 and confUser == 0:
+		authCheck.seek(0, 0)
+		cont = 0
+		counter = 0
+		userPasses = 0
+		token = 0
+		redo = 0
+		needTok = 0
 		for userInfo in authCheck:
 			userPasses += 1
 			userInfo = userInfo.rstrip('\n')
