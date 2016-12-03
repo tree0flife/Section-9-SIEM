@@ -251,7 +251,7 @@ def recieveZipFile(conn, clientID, addr):
 				zipArch.close()
 				print ('extracted')
 				timestamp = open ("/UserStorage/" + clientID + "/USERINFO", "r")
-				coltime = timestamp.read()
+				coltime = timestamp.readline().strip('\n')
 				timestamp.close()
 				#for file in os.listdir("/UserStorage/" + clientID + "/"):
 				if os.path.isfile("/UserStorage/" + clientID + "/bashhist.log"):
