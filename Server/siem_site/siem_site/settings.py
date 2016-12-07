@@ -25,20 +25,22 @@ SECRET_KEY = 'e+p7^gttyd+$!&c#3iwf7%@!n#iqb7qm67%fgb6(^=wg*z89=9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '24.150.80.188', '10.16.12.59']
-
+ALLOWED_HOSTS = ['127.0.0.1','24.150.80.188', '10.16.12.59','192.168.2.17']
 
 # Application definition
 
 INSTALLED_APPS = [
-    'core',
-    'stats',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'stats',
+    'graphos',
+    'core',
+    'client'
+    #static
 ]
 
 MIDDLEWARE = [
@@ -81,7 +83,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

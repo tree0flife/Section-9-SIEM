@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .forms import ClientForm
 from django.views.generic import View
 
-class ClientView(View):
+class View_Client(View):
     form_class = ClientForm
     template_name = 'client.html'
 

@@ -12,8 +12,6 @@ def bash_history_user(user):
     # 1 call to the database: select COMMAND from BASH_HISTORY where user like '%USER';
     query = Bash_History.objects.filter(user__contains=user)
     query = query.values_list(axis[0], flat=True)
-
-
     # make a frequency counter with dictionary
     dict = {}
     for item in query:

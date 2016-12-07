@@ -15,23 +15,27 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.contrib.auth import views
+
+from django.contrib.auth import views as auth_views
+#from django.contrib.auth import views
 from django.views.generic.base import TemplateView
 
+
+
 urlpatterns = [
+
     url(r'^admin/', admin.site.urls),
+
     url(r'^$', TemplateView.as_view(template_name='homepage.html'), name='index'),
+    url(r'^about_us', TemplateView.as_view(template_name ='about_us.html'), name ='about_us'),
+    url(r'contact_us', TemplateView.as_view(template_name ='contact_us.html'),name='contact_us'),
+    #url(r'^register/', include('register.urls'), name='register'),
+    #url(r'^login/$', methods.login, {'template_name': 'login.html'}, name='login'),
 
-    url(r'^about_us/$', TemplateView.as_view(template_name='about_us.html'), name='about_us'),
-    url(r'^forgot_password/$', TemplateView.as_view(template_name='forgot_password.html'), name='forgot'),
-    url(r'^contact_us/$', TemplateView.as_view(template_name='contact_us.html'), name='contact_us'),
+    url(r'^login/$', auth_views.login, name='login'),
+    #url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
 
-    url(r'^login/$', views.login, {'template_name': 'login.html'}, name='login'),
-    url(r'^logout/$', views.logout, {'template_name': 'logout.html'}, name='logout'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
 
-    url(r'^account/', TemplateView.as_view(template_name='account.html'), name='account'),
-
-    url(r'^client/', include('client.urls')),
     url(r'^core/', include('core.urls')),
 ]
