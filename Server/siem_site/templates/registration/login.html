@@ -8,9 +8,9 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-         <a href="{% url 'forgot' %}" onresize="2">Forgot your password?</a>
+         <a href="{% url 'password_reset' %}" onresize="2">Forgot your password?</a>
          <br>
-         Not a member? <a href="" onresize="2">Sign up!</a>
+         Not a member? <a href="{%url 'registration_register' %}" onresize="2">Sign up!</a>
         <br><br>
         <input type="submit" value="Login"/>
     </form>
