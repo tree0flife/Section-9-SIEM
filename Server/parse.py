@@ -1,3 +1,4 @@
+
 import os
 import fnmatch
 import time
@@ -5,16 +6,21 @@ import time
 def editFile(filename, folder, endOfFile):
 	oldLines = []
 	curLine = 0
-	with open("/UserStorage/" + folder + "/Parsing" + filename, "r") as oldFile
+	with open("/UserStorage/" + folder + "/Parsing" + filename, "r") as oldFile:
 		for line in oldFile:
 			oldLines.append(line)
+
+	count = 0
+	for line in edOfFile:
+		count += 1
+		print (count + ": " + line)
 
 	newFile = open("/UserStorage/" + folder + "/Parsing" + filename, "w")
 	numOfLines = sum(1 for line in open("/UserStorage/" + folder + "/Parsing" + filename))
 	for line in oldLines:
 		if curLine == 25:
 			newFile.write(line)
-		if line == endOfFle[curLine] and curLines < 25:
+		if line == endOfFile[curLine] and curLines < 25:
 			curLine += 1
 		elif curLines < 25:
 			curLine == 0
@@ -25,18 +31,19 @@ def writeEndOfFile(filename, folder, endOfFile):
 	endOFFile = []
 	count = 0
 	numOfLines = sum(1 for line in open("/UserStorage/" + folder + "/Parsing" + filename))
-	
+
 	with open("/UserStorage/" + folder + "/Parsing" + filename, "r") as file:
 		for line in file:
 			if count > numOfLines - 25:
 				endOfFile.append(line)
-				
+
 	return endOfFile
 
 ########## Parse the bash files ##########
 def runBash (filename, folder, endOfFile):
+	print ('Ran once')
 	editFile(filename, folder, endOfFile)
-	
+
 	#Formating for clarity in output
 	print ("\nUser: " + folder)
 	print ("File: " + filename)
@@ -72,8 +79,8 @@ def runBash (filename, folder, endOfFile):
 				#copy info to a file
 				saveLocally.write(line)
 	fileToParse.close()
-	
-	endOfFile = writeEndOfFile(filename, folder, endOfFile)
+
+	newEndOfFile = writeEndOfFile(filename, folder, endOfFile)
 
 	#Copy the saved data to the database if there is extra data to send and a connection
 	if os.stat("/UserStorage/" + folder + "/databaseSaveBash").st_size == 0:
@@ -87,8 +94,10 @@ def runBash (filename, folder, endOfFile):
 			os.remove("/UserStorage/" + folder + "/databaseSaveBash")
 		elif database == 0:
 			saveLocally.close()
-			
-	moveFile(filename, folder, endOfFile)
+
+	newestEndOfFile = moveFile(filename, folder, newEndOfFile)
+	print ('Successfuly Ran')
+	return newestEndOfFile
 
 ########## Move the file to a permanent location ##########
 def moveFile(filename, folder, endOfFile):
@@ -125,14 +134,14 @@ if __name__ == '__main__':
 	#count = 0
 	#while (count < 1):
 	endOfFile = []
-	
+
 	while (1):
 		#print(time.strftime('%d-%m-%Y_%H-%M-%S'))
 		#count += 1
 		for folder in os.listdir("/UserStorage/"):
 			if os.path.isdir("/UserStorage/" + folder):
 				for filename in os.listdir("/UserStorage/" + folder + "/"):
-					if fnmatch.fnmatch("/UserStorage/" + folder + "/" + filename, "/UserStorage/" + folder + "/" + "Parsing*"):
+					if fnmatch.fnmatch(filename, "Parsing*"):
 						continue
 					else:
 						try:
@@ -140,7 +149,7 @@ if __name__ == '__main__':
 								fileString = "/UserStorage/" + folder + "/" + filename
 								backupStart = fileString.find (".bak")
 								backupNumber = int(fileString[backupStart + 4:])
-								backupNumberDigits = len(fileString) - 54
+								backupNumberDigits = len(fileString) - 55
 								if backupNumber == 0 and not os.path.isfile(fileString[:-5]):
 									os.rename(fileString, fileString[:-5])
 								elif backupNumber > 0  and not os.path.isfile(fileString[:-(4 + backupNumberDigits)]):

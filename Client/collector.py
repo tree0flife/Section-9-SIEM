@@ -45,10 +45,11 @@ def openfile(name, rasp):
 def cleanup(rasp):
     record = 'USERINFO'
     r = open(record, 'w')
-    r.write(rasp.user)
     r.write(time.strftime('%d-%m-%Y_%H-%M-%S'))
+    r.write(rasp.user)
     r.close()
 
+    print 'should be good'
     os.chdir(rasp.pathdir)
 
     zip_name = zipfile.ZipFile('package_' + str(rasp.package) + '.zip', 'w', zipfile.ZIP_DEFLATED)
