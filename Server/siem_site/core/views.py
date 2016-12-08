@@ -7,11 +7,15 @@ from stats.methods.bash_history import *
 
 class view_bash_history_user(View):
     form_class = Bash_History_User_Form
-    template = 'test_graph.html'
+    template = 'bash_history_user.html'
+    #template ='testgraph.html'
 
     def get(self, request):
         form = self.form_class(None)
-        return render(request, self.template, {'form': form})
+        context={
+            'form': form
+        }
+        return render(request, self.template, context=context)
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -19,4 +23,11 @@ class view_bash_history_user(View):
             user = form.cleaned_data['user']
 
         chart = bash_history_user(user)
-        return render(request, template_name=self.template, context= {'chart': chart} )
+
+        form = self.form_class(None)
+
+        context={
+            'chart': chart,
+            'form': form
+        }
+        return render(request, template_name=self.template, context= context )

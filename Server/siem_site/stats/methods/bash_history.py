@@ -24,9 +24,9 @@ def bash_history_user(user):
     for x, y in dict.items():
         line = x, y
         queryset.append(list(line))
-
     chart = bar_chart_maker_simple(data=queryset)
     return chart
+
 
 def bash_history_all():
 #display every usery user X axis, Y axis = total flag count
