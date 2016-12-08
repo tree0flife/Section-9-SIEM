@@ -146,12 +146,12 @@ def recieveZipFile(conn, clientID, addr):
 				zipArch.extractall("/UserStorage/" + clientID + "/")
 				zipArch.close()
 				print ('extracted')
-				timestamp = open ("/UserStorage/" + clientID + "/USERINFO", "r")
-				coltime = timestamp.readline().strip('\n')
-				timestamp.close()
+				#timestamp = open ("/UserStorage/" + clientID + "/USERINFO", "r")
+				#coltime = timestamp.readline().strip('\n')
+				#timestamp.close()
 				#for file in os.listdir("/UserStorage/" + clientID + "/"):
 				if os.path.isfile("/UserStorage/" + clientID + "/bashhist.log"):
-					os.rename ("/UserStorage/" + clientID + "/bashhist.log", "/UserStorage/" + clientID + "/bashhist." + coltime + ".log")
+					os.rename ("/UserStorage/" + clientID + "/bashhist.log", "/UserStorage/" + clientID + "/bashhist." + pack[9:28] + ".log")
 				os.remove("/UserStorage/" + clientID + "/" + pack)
 	#catch if the zip file is invalid
 	except BadZipFile:
