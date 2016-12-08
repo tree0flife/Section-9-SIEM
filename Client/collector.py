@@ -43,16 +43,16 @@ def openfile(name, rasp):
 #                            CLEANUP                            #
 #################################################################
 def cleanup(rasp):
-    record = 'USERINFO'
-    r = open(record, 'w')
-    r.write(time.strftime('%d-%m-%Y_%H-%M-%S'))
-    r.write(rasp.user)
-    r.close()
+    #record = 'USERINFO'
+    #r = open(record, 'w')
+    #r.write(time.strftime('%d-%m-%Y_%H-%M-%S'))
+    #r.write(rasp.user)
+    #r.close()
 
     print 'should be good'
     os.chdir(rasp.pathdir)
 
-    zip_name = zipfile.ZipFile('package_' + str(rasp.package) + '.zip', 'w', zipfile.ZIP_DEFLATED)
+    zip_name = zipfile.ZipFile('package_' + str(rasp.package) + time.strftime('%d-%m-%Y_%H-%M-%S') + '.zip', 'w', zipfile.ZIP_DEFLATED)
     dirlist = os.listdir(rasp.pathdir + '/temp')
     for list in dirlist:
         get_file = os.path.join(rasp.pathdir + '/temp/', list)
@@ -82,11 +82,11 @@ def run(rasp):
     print 'Working...'
     os.mkdir(rasp.pathdir + '/temp', 0700)
     os.chdir(rasp.pathdir + '/temp')
-    openfile('dpkg.log', None)
-    openfile('auth.log', None)
-    openfile('kern.log', None)
-    openfile('syslog', None)
-    openfile('apt-hist.log', None)
+    #openfile('dpkg.log', None)
+    #openfile('auth.log', None)
+    #openfile('kern.log', None)
+    #openfile('syslog', None)
+    #openfile('apt-hist.log', None)
     openfile('bashhist.log', rasp)
     cleanup(rasp)
     print 'Done..'

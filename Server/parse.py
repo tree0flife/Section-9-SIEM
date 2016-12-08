@@ -11,24 +11,25 @@ def editFile(filename, folder, endOfFile):
 			oldLines.append(line)
 
 	count = 0
-	for line in edOfFile:
+	for line in endOfFile:
 		count += 1
 		print (count + ": " + line)
 
-	newFile = open("/UserStorage/" + folder + "/Parsing" + filename, "w")
-	numOfLines = sum(1 for line in open("/UserStorage/" + folder + "/Parsing" + filename))
-	for line in oldLines:
-		if curLine == 25:
-			newFile.write(line)
-		if line == endOfFile[curLine] and curLines < 25:
-			curLine += 1
-		elif curLines < 25:
-			curLine == 0
-	newFile.close()
+	if endOfFile:
+		newFile = open("/UserStorage/" + folder + "/Parsing" + filename, "w")
+		#numOfLines = sum(1 for line in open("/UserStorage/" + folder + "/Parsing" + filename))
+		for line in oldLines:
+			if curLine == 25:
+				newFile.write(line)
+			if line == endOfFile[curLine] and curLines < 25:
+				curLine += 1
+			elif curLines < 25:
+				curLine == 0
+		newFile.close()
 
 ########## Keep the last 25 lines of the previously parsed file ##########
 def writeEndOfFile(filename, folder, endOfFile):
-	endOFFile = []
+	endOfFile = []
 	count = 0
 	numOfLines = sum(1 for line in open("/UserStorage/" + folder + "/Parsing" + filename))
 
@@ -61,24 +62,35 @@ def runBash (filename, folder, endOfFile):
 
 	#Parse the file and search for key terms
 	for line in fileToParse:
+		#print (line)
 		line = line.rstrip('\n')
 		for term in keyTerms:
+			#print ('checking')
 			if fnmatch.fnmatch (line, term + "*"):
 				if database == 1:
 					#send info to database
 					nothing = 1
 				elif database == 0:
+					#print ('hi')
 					#copy info to a file
-					saveLocally.write(line)
-		if 'su' == line or fnmatch.fnmatch (line, 'su *') or fnmatch.fnmatch (line, '*/ *') or fnmatch.fnmatch (line, '*/'):
-			#send flag to database
-			if database == 1:
-				#send info to database
-				nothing = 1
-			elif database == 0:
-				#copy info to a file
-				saveLocally.write(line)
+					saveLocally.write(line + "\n")
+					continue
+			elif 'su' == line or fnmatch.fnmatch (line, 'su *') or fnmatch.fnmatch (line, '* / *') or fnmatch.fnmatch (line, '* /'):
+				#send flag to database
+				if database == 1:
+					#send info to database
+					nothing = 1
+				elif database == 0:
+					#print ('bye')
+					#copy info to a file
+					saveLocally.write(line + "\n")
+					continue
+
 	fileToParse.close()
+
+	if database == 0:
+		print ('saving')
+		saveLocally.close()
 
 	newEndOfFile = writeEndOfFile(filename, folder, endOfFile)
 
@@ -136,6 +148,7 @@ if __name__ == '__main__':
 	endOfFile = []
 
 	while (1):
+		time.sleep(1)
 		#print(time.strftime('%d-%m-%Y_%H-%M-%S'))
 		#count += 1
 		for folder in os.listdir("/UserStorage/"):
@@ -144,23 +157,23 @@ if __name__ == '__main__':
 					if fnmatch.fnmatch(filename, "Parsing*"):
 						continue
 					else:
-						try:
-							if fnmatch.fnmatch (filename, "*.bak*"):
-								fileString = "/UserStorage/" + folder + "/" + filename
-								backupStart = fileString.find (".bak")
-								backupNumber = int(fileString[backupStart + 4:])
-								backupNumberDigits = len(fileString) - 55
-								if backupNumber == 0 and not os.path.isfile(fileString[:-5]):
-									os.rename(fileString, fileString[:-5])
-								elif backupNumber > 0  and not os.path.isfile(fileString[:-(4 + backupNumberDigits)]):
-									os.rename(fileString, fileString[:-(backupNumberDigits)] + str(backupNumber-1))
-							else:
-								if fnmatch.fnmatch (filename, "bashhist*.log"):
-									os.rename ("/UserStorage/" + folder + "/" + filename, "/UserStorage/" + folder + "/Parsing" + filename)
-									child = os.fork()
-									if child == 0:
-										if fnmatch.fnmatch("/UserStorage/" + folder + "/Parsing" + filename, "/UserStorage/" + folder + "/" + "Parsingbashhist*.log"):
-											endOfFile = runBash(filename, folder, endOfFile)
-										os._exit(0)
-						except FileNotFound:
-							print ("File " + filename + " was no longer found")
+						#try:
+						if fnmatch.fnmatch (filename, "*.bak*"):
+							fileString = "/UserStorage/" + folder + "/" + filename
+							backupStart = fileString.find (".bak")
+							backupNumber = int(fileString[backupStart + 4:])
+							backupNumberDigits = len(fileString) - 55
+							if backupNumber == 0 and not os.path.isfile(fileString[:-5]):
+								os.rename(fileString, fileString[:-5])
+							elif backupNumber > 0  and not os.path.isfile(fileString[:-(4 + backupNumberDigits)]):
+								os.rename(fileString, fileString[:-(backupNumberDigits)] + str(backupNumber-1))
+						else:
+							if fnmatch.fnmatch (filename, "bashhist*.log"):
+								os.rename ("/UserStorage/" + folder + "/" + filename, "/UserStorage/" + folder + "/Parsing" + filename)
+								child = os.fork()
+								if child == 0:
+									if fnmatch.fnmatch("/UserStorage/" + folder + "/Parsing" + filename, "/UserStorage/" + folder + "/" + "Parsingbashhist*.log"):
+										endOfFile = runBash(filename, folder, endOfFile)
+									os._exit(0)
+						#except FileNotFound:
+							#print ("File " + filename + " was no longer found")
