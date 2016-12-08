@@ -170,6 +170,7 @@ def dispatch(sock):
                     f.close()
                     sock.close()
                     return 1
+            os.remove(match.group())
 
     f.close()
     sock.close()
@@ -211,4 +212,5 @@ if __name__ == "__main__":
                 sock = conn_handle(sock)
             else:
                 break
-        time.sleep(300)
+        #time.sleep(300)
+        time.sleep(10)
