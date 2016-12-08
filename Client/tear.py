@@ -2,8 +2,7 @@
 
 ############################################################
 #                           NOTE:                          #
-#		      Don't Use TCPDUMP			   #
-#                                                          #
+#                 Need to filter only IP's                 #
 ############################################################
 
 import os
@@ -20,8 +19,7 @@ class pcapkiller:
 
     def tcpdump(self, name):
         p = self.call(name, 0)
-        var = 1
-        while var == 1:
+        while True:
             for x in range(0, 120):
                 time.sleep(1)
                 if x == 110:
