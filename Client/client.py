@@ -9,10 +9,8 @@ import sys
 import time
 import os 
 import collector
+import tear 
 from multiprocessing import Process, Queue
-
-# not yet implemented in this program. Considering using SCAPY Lib.
-# from tear import pcapkiller 
 
 
 #################################################################
@@ -203,14 +201,17 @@ if __name__ == "__main__":
     #	    one from the server. The server will send a message like REFRESH, then send a
     #	    signal to this process that "speeds up" the collection and sends it off.
     while True:
+        #p = Process(target=butter, args=(1, q, str(sys.argv[1])))
+        #p.start()
+        #p.join()
+        time.sleep(10)
         print 'collecting...'
         collector.execute(0, None, str(sys.argv[1]))
         print 'sending...'
-        while True:
-            if (dispatch(sock) == 1):
-                sock = createConnection(0)
-                sock = conn_handle(sock)
-            else:
-                break
+        #while True:
+        if (dispatch(sock) == 1):
+            sock = createConnection(0)
+            sock = conn_handle(sock)
+        #else:
+            #break
         #time.sleep(300)
-        time.sleep(10)

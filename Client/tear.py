@@ -29,3 +29,19 @@ class pcapkiller:
                     f.terminate()
                     f.wait()
                     break
+    def nucleas(self, p):
+        f = p
+        p = butter(q)
+        f.terminate()
+        f.wait()
+        o.close()
+
+    def butter(self, q):
+        with open('shasta', 'w') as output:
+            server = sub.Popen(('tcpdump', '-q', '-n', 'host', '10.16.27.8'), stdout=output)
+            while q.empty() == True:
+                time.sleep(1)
+            server.communicate()
+            server.terminate()
+            server.wait()
+            output.close()
