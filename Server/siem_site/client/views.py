@@ -37,7 +37,7 @@ class View_Client(View):
                 'form': form
             }
 
-            #@TODO SUBMIT, RESET, GROWING LIST
+            #@TODO SUBMIT, RESET, GROWING LIST , ALERT WHEN MODIFIYING THINGS
             return render(request, self.template_name,context=context )
 
 class View_Client_Add(View):
