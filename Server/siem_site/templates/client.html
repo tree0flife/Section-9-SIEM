@@ -2,17 +2,47 @@
 
 {% block title %} Client {% endblock %}
 
+{% block style %}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+{% endblock %}
+
 {% block head %}
     <meta charset="UTF-8">
 {% endblock %}
 
 {% block content %}
+<ul>
+    <li><a href="{% url 'view_client' %}">View client</a></li>
+    <li><a href="">Add client</a></li>
+    <li><a href="">Edit client</a></li>
+</ul>
+
 <form role="form" action='' method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit"  />
 </form>
-
-Client List Test
 
 {% endblock %}

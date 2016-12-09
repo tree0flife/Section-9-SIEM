@@ -17,7 +17,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.ClientView.as_view(), name='client'),
+    url(r'view_client/$', views.View_Client.as_view(), name='view_client'),
 ]
 
 

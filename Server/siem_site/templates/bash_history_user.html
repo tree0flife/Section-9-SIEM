@@ -2,6 +2,32 @@
 
 {% block title %} Bash history user {% endblock %}
 
+{% block style %}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+{% endblock %}
+
 {% block head %}
  {% load static %}
     <script src="{% static '/js/flot/jquery.js' %}" ></script>
@@ -11,14 +37,18 @@
 {% endblock %}
 
 {% block content %}
+    <ul>
+        <li><a href="{% url 'bash_history_user' %}">Bash history user</a></li>
+        <li><a href="">Browser history</a></li>
+    </ul>
+
 <form role="form" action='' method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit"  />
 </form>
 
-HELLO IS THIS WORKING????
-
+<br><br>
 {{ chart.as_html }}
 
 {% endblock %}
