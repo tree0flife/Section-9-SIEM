@@ -52,11 +52,16 @@ def cleanup(rasp):
     print 'should be good'
     os.chdir(rasp.pathdir)
 
+    #check if pcap exists in siem9 then write it to the zip then delete it
+    if os.path.isfile("/root/siem9/shasta") == True:
+	shutil.move("/root/siem9/shasta", "/root/siem9/deliverables/temp")
+
     zip_name = zipfile.ZipFile('package_' + str(rasp.package) + time.strftime('%d-%m-%Y_%H-%M-%S') + '.zip', 'w', zipfile.ZIP_DEFLATED)
     dirlist = os.listdir(rasp.pathdir + '/temp')
     for list in dirlist:
         get_file = os.path.join(rasp.pathdir + '/temp/', list)
         zip_name.write(get_file, list)
+
 
     zip_name.close()
     shutil.rmtree(rasp.pathdir + '/temp')

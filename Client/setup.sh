@@ -12,7 +12,7 @@ case "$1" in
         mkdir /root/siem9
         cp client.py /root/siem9
         cp collector.py /root/siem9
-        cp tear.py /root/siem9
+        #cp tear.py /root/siem9
         chmod 750 /root/siem9/*
         
         cp siem9 /etc/init.d/$name

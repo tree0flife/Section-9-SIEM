@@ -9,8 +9,8 @@ import sys
 import time
 import os 
 import collector
-import tear 
 from multiprocessing import Process, Queue
+import subprocess as sub
 
 
 #################################################################
@@ -163,17 +163,29 @@ def dispatch(sock):
                 try:
                     sock.send(l)
                     l = f.read(1024)
+		    print f.tell()
+		    if (f.tell() % 1024) > 0:
+			os.remove(match.group())
+			break
                 except socket.error:
-                    print '[-] ERROR: No connection. Aborting.'
-                    f.close()
-                    sock.close()
-                    return 1
-            os.remove(match.group())
+		    print '[-] ERROR: No connection. Aborting.'
+		    f.close()
+		    sock.close()
+		    return 1
+	    f.close()
 
-    f.close()
-    sock.close()
+    #sock.close()
     print '[*] SUCCESS'
     print '[*] Connection closed'
+    return 0
+
+#################################################################
+#			    BUTTER				#
+#################################################################
+def butter():
+    output = open("/root/siem9/shasta", "w")
+    server = sub.Popen(('tcpdump', '-q', '-nn', 'host', '192.168.91.135'), stdout=output)
+    return server
 
 #################################################################
 #                        SIGNAL HANDLER                         #
@@ -192,6 +204,7 @@ if __name__ == "__main__":
 
     sock = createConnection(0)
     sock = conn_handle(sock)
+    p = butter()
 
     # NOTE: need to modify to watch for certain messages(signals) sent from the server
     #       (ex. server sends REFRESH, client execute()'s and sends data)
@@ -201,17 +214,15 @@ if __name__ == "__main__":
     #	    one from the server. The server will send a message like REFRESH, then send a
     #	    signal to this process that "speeds up" the collection and sends it off.
     while True:
-        #p = Process(target=butter, args=(1, q, str(sys.argv[1])))
-        #p.start()
-        #p.join()
-        time.sleep(10)
+        time.sleep(15)
+	p.terminate()
+	p.wait()
+
         print 'collecting...'
         collector.execute(0, None, str(sys.argv[1]))
         print 'sending...'
-        #while True:
+
         if (dispatch(sock) == 1):
             sock = createConnection(0)
             sock = conn_handle(sock)
-        #else:
-            #break
-        #time.sleep(300)
+	p = butter()
