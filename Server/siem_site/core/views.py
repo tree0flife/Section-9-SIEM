@@ -21,13 +21,12 @@ class view_bash_history_user(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             user = form.cleaned_data['user']
-
+        #sets context
+        #call stats app methods (convoluded)/should rename core to stats and move those methods here
         chart = bash_history_user(user)
-
-        form = self.form_class(None)
-
+        form = self.form_class(request.POST)
         context={
             'chart': chart,
             'form': form
         }
-        return render(request, template_name=self.template, context= context )
+        return render(request, template_name=self.template, context=context)
