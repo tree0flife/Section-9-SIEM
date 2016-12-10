@@ -23,7 +23,6 @@ from django.views.generic.base import TemplateView
 
 
 urlpatterns = [
-
     url(r'^admin/', admin.site.urls),
 
     url(r'^$', TemplateView.as_view(template_name='homepage.html'), name='index'),
@@ -33,6 +32,7 @@ urlpatterns = [
     #url(r'^$', include('auth_views.login')),
 
     url(r'^', include ('django.contrib.auth.urls')),
+    url(r'^account/$', TemplateView.as_view(template_name='account.html'), name='account'),
     #url(r'^forgot/$',auth_views.password_reset),
     #url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),

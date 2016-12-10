@@ -32,13 +32,10 @@ li a:hover {
     <meta charset="UTF-8">
 {% endblock %}
 
+{% block nav_bar %}
+    {% include 'includes/client_nav_bar.html' %}
+{% endblock %}
+
 {% block content %}
-<ul>
-    <li><a href="">View client</a></li>
-    <li><a href="">Add client</a></li>
-    <li><a href="">Edit client</a></li>
-</ul>
-
 Client homeback
-
 {% endblock %}

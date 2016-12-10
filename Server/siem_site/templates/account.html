@@ -9,5 +9,5 @@
     <br><br>
     Current email: {{ request.user.email }}
     <br><br>
-    <a href="">Change password</a>
+    <a href="{% url 'password_change' %}">Change password</a>
 {% endblock %}

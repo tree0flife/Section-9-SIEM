@@ -25,7 +25,7 @@
       <a href="{% url 'index' %}">Home</a>
 
       {% if user.is_authenticated %}
-        <a href="">Account</a>
+        <a href="{% url 'account' %}">Account</a>
         <a href="{% url 'client' %}">Clients</a>
         <a href="{% url 'bash_history_user' %}">Stats</a>
         <a href="{% url 'logout' %}">Logout</a>
@@ -38,15 +38,20 @@
         <a href="{% url 'contact_us' %}">Contact us</a>
     </nav>
 
-    <div style="margin-left:12%">
-      {% block content %}
+    <div style="margin-left:10%">
+      {% block nav_bar %}
       {% endblock %}
+      <br>
+      <div style="margin-left:2%">
+        {% block content %}
+        {% endblock %}
+      </div>
       <hr>
     </div>
   </main>
   <footer>
     <font size="2">
-      <div style="margin-left:12%" align="center">
+      <div style="margin-left:10%" align="center">
           <font color="#CCCCCC">
               SiemSite &reg;
               <a href="{% url 'index' %}">www.siemsite.com</a>

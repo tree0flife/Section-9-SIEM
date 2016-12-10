@@ -36,12 +36,11 @@ li a:hover {
     <meta charset="UTF-8">
 {% endblock %}
 
-{% block content %}
-    <ul>
-        <li><a href="{% url 'bash_history_user' %}">Bash history user</a></li>
-        <li><a href="">Browser history</a></li>
-    </ul>
+{% block nav_bar %}
+    {% include 'includes/stats_nav_bar.html' %}
+{% endblock %}
 
+{% block content %}
 <form role="form" action='' method="post">
     {% csrf_token %}
     {{ form.as_p }}
@@ -52,3 +51,4 @@ li a:hover {
 {{ chart.as_html }}
 
 {% endblock %}
+
