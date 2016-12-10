@@ -21,8 +21,7 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='client.html'), name='client'),
     url(r'^add$', views.View_Client_Add.as_view(), name='client_add'),
     url(r'^list', views.View_Client_List.as_view(), name='client_list'),
-
-    #    url(r'^bash_history_user/$', views.view_bash_history_user.as_view(), name='bash_history_user'),
+    url(r'^delete',views.View_Client_Delete.as_view(),name='client_delete')
 
 ]
 

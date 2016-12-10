@@ -2,13 +2,12 @@ from django.shortcuts import render
 from django.views.generic import View
 
 from .forms import *
-from stats.methods.bash_history import *
+from .methods.bash_history import *
 
 
-class view_bash_history_user(View):
+class View_Bash_History_User(View):
     form_class = Bash_History_User_Form
     template = 'bash_history_user.html'
-    #template ='testgraph.html'
 
     def get(self, request):
         form = self.form_class(None)
@@ -30,3 +29,9 @@ class view_bash_history_user(View):
             'form': form
         }
         return render(request, template_name=self.template, context=context)
+
+class View_Browser_History_User(View):
+    def get (self,request):
+        return 'memes'
+    def post(self,request):
+        return'memes'

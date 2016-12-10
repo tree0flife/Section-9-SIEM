@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from .forms import Client_Form
+from django.shortcuts import render,redirect
+from .forms import Client_Form,Client_Form_Delete
 from .models import Client
 from django.views.generic import View
 
@@ -13,7 +13,6 @@ class View_Client_Add(View):
 
     def post(self, request):
         form = self.form_class(request.POST)
-
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
@@ -37,3 +36,20 @@ class View_Client_List(View):
         return  render(request,self.template,context=context)
 
 #delete_client
+class View_Client_Delete(View):
+    template = 'client_delete.html'
+    form_class = Client_Form_Delete
+    def get(self, request):
+        form = self.form_class(None)
+        context={
+            'form': form
+        }
+        return render(request, template_name=self.template, context=context)
+
+    def post(self,request):
+
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            Client.objects.filter(username__contains=username).delete()
+        return redirect('client_list')
