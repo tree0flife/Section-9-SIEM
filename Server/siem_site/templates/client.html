@@ -34,15 +34,11 @@ li a:hover {
 
 {% block content %}
 <ul>
-    <li><a href="{% url 'view_client' %}">View client</a></li>
+    <li><a href="">View client</a></li>
     <li><a href="">Add client</a></li>
     <li><a href="">Edit client</a></li>
 </ul>
 
-<form role="form" action='' method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit"  />
-</form>
+Client homeback
 
 {% endblock %}

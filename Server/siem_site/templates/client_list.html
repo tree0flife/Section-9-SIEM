@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+client_list
+<table style="width:100%">
+ <tr>
+    <th>Username</th>
+    <th>PAssword</th>
+    <th>Token</th>
+  </tr>
+{% for client in client_list %}
+<tr>
+    <td>{{client.username}}</td>
+    <td>{{client.password}}</td>
+    <td>{{client.token}}</td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
