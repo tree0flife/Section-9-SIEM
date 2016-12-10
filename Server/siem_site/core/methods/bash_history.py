@@ -5,12 +5,12 @@ from .graph import bar_chart_maker_simple
 from graphos.sources.model import ModelDataSource,SimpleDataSource
 from graphos.renderers.flot import BarChart, LineChart
 
-def bash_history_user(user):
+def bash_history_client(client):
     #  x axis = command   y axis = frequency
     axis = ['command', 'count']
 
     # 1 call to the database: select COMMAND from BASH_HISTORY where user like '%USER';
-    query = Bash_History.objects.filter(user__contains=user)
+    query = Bash_History.objects.filter(user__contains=client)
     query = query.values_list(axis[0], flat=True)
     # make a frequency counter with dictionary
     dict = {}
