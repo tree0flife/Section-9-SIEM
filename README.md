@@ -7,9 +7,7 @@ Ryan
   - Database working correctly
   - Pcap parsing
 
-Stefan
-  - Implement tear.py into the main program (using Scapy)
-  - *No more errors. Will handle any others if they creep up.*
+Stefan - _finito_ !
 
 Sylvain
   X configure python environment on server
