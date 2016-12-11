@@ -23,13 +23,11 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='homepage.html'), name='index'),
     url(r'^about_us', TemplateView.as_view(template_name ='about_us.html'), name='about_us'),
     url(r'contact_us', TemplateView.as_view(template_name ='contact_us.html'), name='contact_us'),
-    #url(r'^register/', include('register.urls'), name='register'),
     #url(r'^$', include('auth_views.login')),
 
     url(r'^', include ('django.contrib.auth.urls')),
     url(r'^account/$', TemplateView.as_view(template_name='account.html'), name='account'),
-    #url(r'^forgot/$',auth_views.password_reset),
-    #url(r'^logout/$', TemplateView.as_view(template_name='logout.html'), name='logout'),
+    #url(r'^user_logout/$', TemplateView.as_view(template_name='logout.html'), name='user_logout'),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
 
     url(r'^core/', include('core.urls')),

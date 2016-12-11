@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import StreamingHttpResponse
-from .forms import *
-from .methods.bash_history import *
+from .forms import Client_Request_Form
+
+from .methods.bash_history import bash_history_client
+from .methods.pcap import outbound_ip_client
 
 
 class View_Bash_History_Client(View):
-    form_class = Bash_History_Client_Form
+    form_class = Client_Request_Form
     template = 'bash_history_client.html'
 
     def get(self, request):
@@ -28,11 +30,25 @@ class View_Bash_History_Client(View):
         }
         return render(request, template_name=self.template, context=context)
 
-class View_Browser_History_Client(View):
+class View_Outbound_IP_Client(View):
+    template ='outbound_ip_client.html'
+    form_class = Client_Request_Form
     def get (self,request):
-        return 'memes'
+        form = self.form_class(None)
+        context={'form': form}
+        return render(request, self.template, context=context)
+
     def post(self,request):
-        return'memes'
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            client = form.cleaned_data['client']
+        chart = outbound_ip_client(client)
+        form = self.form_class(request.POST)
+        context = {
+            'chart': chart,
+            'form': form
+        }
+        return render(request, template_name=self.template, context=context)
 
 
 def View_Download_Client(request):

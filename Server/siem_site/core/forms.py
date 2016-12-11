@@ -1,4 +1,4 @@
 from django import forms
 
-class Bash_History_Client_Form(forms.Form):
-    user = forms.CharField(label='user', max_length=30)
+class Client_Request_Form(forms.Form):
+    client = forms.CharField(label='user', max_length=30)

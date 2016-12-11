@@ -19,9 +19,9 @@
 {% endblock %}
 
 {% block content %}
-    <font size="5"><b>Client Bash History</b></font>
+    <font size="5"><b>Client Outbound IP</b></font>
     <br><br>
-    <u>Fill in the following field to view a client's bash history</u>
+    <u>Fill in the following field to view a client's outbound ip addresses</u>
     <form role="form" action='' method="post">
         {% csrf_token %}
         {{ form.as_p }}
@@ -32,4 +32,3 @@
 {{ chart.as_html }}
 
 {% endblock %}
-

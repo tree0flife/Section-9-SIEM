@@ -41,9 +41,7 @@ class View_Client_Delete(View):
     form_class = Client_Form_Delete
     def get(self, request):
         form = self.form_class(None)
-        context={
-            'form': form
-        }
+        context={'form': form}
         return render(request, template_name=self.template, context=context)
 
     def post(self,request):

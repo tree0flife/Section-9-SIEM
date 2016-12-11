@@ -4,10 +4,10 @@ from django.db import models
 class Bash_History(models.Model):
     username = models.CharField(max_length=30)
     command = models.CharField(max_length=60)
-    time_stamp= models.CharField(max_length=20)
+    time= models.CharField(max_length=20)
 
 class Network(models.Model):
     username = models.CharField(max_length=30)
     ip = models.CharField(max_length=15)
-    timep= models.CharField(max_length=20)
+    time= models.CharField(max_length=20)
 
