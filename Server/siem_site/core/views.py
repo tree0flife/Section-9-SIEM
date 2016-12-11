@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View
-
+from django.http import StreamingHttpResponse
 from .forms import *
 from .methods.bash_history import *
 
@@ -20,8 +20,6 @@ class View_Bash_History_Client(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             client = form.cleaned_data['client']
-        #sets context
-        #call stats app methods (convoluded)/should rename core to stats and move those methods here
         chart = bash_history_client(client)
         form = self.form_class(request.POST)
         context={
@@ -35,3 +33,12 @@ class View_Browser_History_Client(View):
         return 'memes'
     def post(self,request):
         return'memes'
+
+
+def View_Download_Client(request):
+    path_to_file = 'media/siem9-client-1.0.0.zip'
+    zip_file = open(path_to_file, 'rb')
+    response = StreamingHttpResponse(zip_file, content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % 'siem9-client-1.0.0.zip'
+    return response
+
