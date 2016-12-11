@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'graphos',
     'core',
     'client'
-    #static
 ]
 
 MIDDLEWARE = [
