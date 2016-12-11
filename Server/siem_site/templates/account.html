@@ -2,9 +2,9 @@
 
 {% block title %}Account{% endblock %}
 
+{% block nav_bar %} <br><div style="margin-left:2%"> <b><font size="5">{{ request.user.username }}'s profile</font></b> </div> <hr> {% endblock %}
+
 {% block content %}
-    <font size="5">{{ request.user.username }}'s profile</font>
-    <hr>
     Username: {{ request.user.username }}
     <br><br>
     Current email: {{ request.user.email }}

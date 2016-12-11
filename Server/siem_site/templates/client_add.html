@@ -3,29 +3,7 @@
 {% block title %} Add a client {% endblock %}
 
 {% block style %}
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
-
-li {
-    float: left;
-}
-
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover {
-    background-color: #111;
-}
+    {% include 'includes/style.html' %}
 {% endblock %}
 
 {% block head %}
@@ -37,11 +15,13 @@ li a:hover {
 {% endblock %}
 
 {% block content %}
-Client add
-<form role="form" action='' method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit"  />
-</form>
+    <font size="5"><b>Add Client</b></font>
+    <br><br>
+    <u>Fill in the following fields to add a client</u>
+    <form role="form" action='' method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit"  />
+    </form>
 
 {% endblock %}

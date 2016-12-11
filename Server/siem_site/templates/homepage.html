@@ -2,14 +2,15 @@
 
 {% block title %} Homepage {% endblock %}
 
+{% block nav_bar %} <br><div style="margin-left:2%"> <b><font size="5">Homepage</font></b> </div> <hr> {% endblock %}
+
 {% block content %}
-    <font size="5">Homepage</font>
-    <hr>
+
     {% if user.is_authenticated %}
-        This is our homepage
+        Click on  <a href="{% url 'client' %}">clients</a> to view or manage client information
+        <br><br>
+        Click on <a href="{% url 'core' %}">core</a> for users' data
     {% else %}
-        Sign in so we can show you what we do!
-        <br>
-        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'login' %}">Sign in</a> to see the features of SiemSite!
     {% endif %}
 {% endblock %}

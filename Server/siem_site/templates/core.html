@@ -1,13 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-Help~
-//list all the commands and what they do (admin/user perspect)
+{% block style %}
+    {% include 'includes/style.html' %}
+{% endblock %}
 
-</body>
-</html>
+{% block nav_bar %}
+    {% include 'includes/core_nav_bar.html' %}
+{% endblock %}
+
+{% block content %}
+    <font size="5"><b>Tool list</b></font>
+    <br><br>
+        Client bash history - to  view the bash history of a specified client
+        <br><br>
+        Client destination IP - to view the destination IP address of outbound packets and their frequency for a specified client
+{% endblock %}

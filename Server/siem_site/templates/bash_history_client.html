@@ -3,29 +3,7 @@
 {% block title %} Bash history client {% endblock %}
 
 {% block style %}
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
-
-li {
-    float: left;
-}
-
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover {
-    background-color: #111;
-}
+    {% include 'includes/style.html' %}
 {% endblock %}
 
 {% block head %}
@@ -37,15 +15,18 @@ li a:hover {
 {% endblock %}
 
 {% block nav_bar %}
-    {% include 'includes/stats_nav_bar.html' %}
+    {% include 'includes/core_nav_bar.html' %}
 {% endblock %}
 
 {% block content %}
-<form role="form" action='' method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit"  />
-</form>
+    <font size="5"><b>Client bash history</b></font>
+    <br><br>
+    <u>Fill in the following field to view a client's bash history</u>
+    <form role="form" action='' method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit"  />
+    </form>
 
 <br><br>
 {{ chart.as_html }}

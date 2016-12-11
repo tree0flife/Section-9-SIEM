@@ -1,16 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-Client Deletion page
-<form role="form" action='' method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit"  />
-</form>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %} Delete a client {% endblock %}
+
+{% block style %}
+    {% include 'includes/style.html' %}
+{% endblock %}
+
+{% block nav_bar %}
+    {% include 'includes/client_nav_bar.html' %}
+{% endblock %}
+
+{% block content %}
+    <font size="5"><b>Delete Client</b></font>
+    <br><br>
+    <u>Fill in the following field to delete a client</u>
+    <form role="form" action='' method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit"  />
+    </form>
+{% endblock %}

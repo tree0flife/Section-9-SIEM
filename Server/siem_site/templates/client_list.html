@@ -3,29 +3,7 @@
 {% block title %} List of clients {% endblock %}
 
 {% block style %}
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
-
-li {
-    float: left;
-}
-
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover {
-    background-color: #111;
-}
+    {% include 'includes/style.html' %}
 {% endblock %}
 
 {% block nav_bar %}
@@ -33,6 +11,8 @@ li a:hover {
 {% endblock %}
 
 {% block content %}
+    <font size="5"><b>Current list of clients</b></font>
+    <br><br>
     <table style="width:90%" border="1">
      <tr>
         <th>Username</th>

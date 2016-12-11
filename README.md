@@ -10,15 +10,9 @@ Ryan
 Stefan - _finito_ !
 
 Sylvain
-  X configure python environment on server
-  X install django
-  - graphing app //graphos(flot)
-  - workflow management(git)
-  - setting up models/db
-  X setting up Gunicorn,
-  - need to setup NGINX + proper port and setup TLS
-  - create and admin
-  - figure what else is down the pipeline
+  - setup PCAP stats
+  - setup client download
+  - setup server
 
 Imad
 - creating client-side HTML files (login.html and register.html)
@@ -28,6 +22,8 @@ Imad
   - making sure it is robust (strictly only accept compressed data - zip files of any format + other requirements) 
 - navigation between webpages
   - links on all the webpages
+- design client and core pages
+  - added tool lists to both pages undeer "main" link in top nav bars
 
 Extra things if we have time
   - encrypt authentication and data sent over network
