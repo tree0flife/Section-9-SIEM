@@ -3,6 +3,7 @@ import os
 import fnmatch
 import time
 import re
+import sqlite3
 
 def editFile(filename, folder, mode):
 	oldLines = []
@@ -50,20 +51,22 @@ def writeEndOfFile(filename, folder, mode):
 	endOfFile.close()
 
 ########## Parse the bash files ##########
-def run (filename, folder, mode):
+def run (filename, folder, mode, time):
 	editFile(filename, folder, mode)
 
 	#Formating for clarity in output
 	print ("\nUser: " + folder)
 	print ("File: " + filename)
-	database = 0
+	database = sqlite3.connect('siem_site/db.sqlite3')
 
 	#Open the file to parse and create a list of key terms to search for
 	fileToParse = open ("/UserStorage/" + folder + "/Parsing" + filename)
 	if mode == 'Bash':
-		saveLocally = runBash(filename, folder, mode, fileToParse, database)
+		table = 'core_bash_history'
+		saveLocally, database = runBash(filename, folder, mode, fileToParse, database, time, table)
 	elif mode == 'Network':
-		saveLocally = runNetwork(filename, folder, mode, fileToParse, database)
+		table = 'core_network'
+		saveLocally, database = runNetwork(filename, folder, mode, fileToParse, database, time, table)
 
 	if database == 0:
 		print ('saving')
@@ -73,17 +76,18 @@ def run (filename, folder, mode):
 
 	#Copy the saved data to the database if there is extra data to send and a connection
 	if not (os.stat("/UserStorage/" + folder + "/databaseSave" + mode).st_size == 0):
-		if database == 1:
+		if database > 0:
 			for line in saveLocally:
-				#send info to the server
-				pass
+				database.execute("INSERT INTO " + table + " VALUES (?, ?, ?)", (folder, line, time))
+				database.commit()
 			saveLocally.close()
 			os.remove("/UserStorage/" + folder + "/databaseSave" + mode)
 
+	database.close()
 	moveFile(filename, folder)
 	#print ('Successfuly Ran')
 
-def runNetwork (filename, folder, mode, fileToParse, database):
+def runNetwork (filename, folder, mode, fileToParse, database, time, table):
 	keyTerms = ('24.150.80.188', '192.168.0.666')
 	#open file to save info if connection to database fails
 	if os.path.isfile("/UserStorage/" + folder + "/databaseSave" + mode):
@@ -101,31 +105,40 @@ def runNetwork (filename, folder, mode, fileToParse, database):
 			#print (line[3] + "." + line[4] + "." + line[5] + "." + line[6] +"\t" + keyTerms[0])
 		for term in keyTerms:
 			#print ('checking')
-			if len(line) > 6 and line[3] + "." + line[4] + "." + line[5] + "." + line[6] == term:
-				if database == 1:
-					#send info to database
-					pass
-				elif database == 0:
+			ip = line[3] + "." + line[4] + "." + line[5] + "." + line[6]
+			ip2 = line[9] + "." + line[10] + "." + line[11] + "." + line[12]
+			if len(line) > 6 and ip == term:
+				database, id = getID(database, table)
+				if id == 50:
+					break
+				spam = database.execute("INSERT INTO " + table + " VALUES (?, ?, ?)", (id, folder, ip, time))
+				#print (spam)
+				continue
+				if database == 0:
 					#print ('hi')
 					#copy info to a file
-					print ("\tMatch: " + line[3] + "." + line[4] + "." + line[5] + "." + line[6])
+					#print ("\tMatch: " + line[3] + "." + line[4] + "." + line[5] + "." + line[6])
 					saveLocally.write(myline + "\n")
 					continue
-			elif len(line) > 12 and fnmatch.fnmatch (line[9] + "." + line[10] + "." + line[11] + "." + line[12], term):
-				if database == 1:
-					#send info to database
-					pass
-				elif database == 0:
+			elif len(line) > 12 and ip2 == term:
+				database, id = getID(database, table)
+				if id == 50:
+					break
+				spam = database.execute("INSERT INTO " + table + " VALUES (?, ?, ?, ?)", (id, folder, ip2, time))
+				#print (spam)
+				continue
+				if database == 0:
 					#print ('hi')
 					#copy info to a file
 					saveLocally.write(myline + "\n")
 					continue
 
+	database.commit()
 	fileToParse.close()
-	return saveLocally
+	return saveLocally, database
 
-def runBash (filename, folder, mode, fileToParse, database):
-	keyTerms = ('nmap', 'sudo', 'cp', 'rm', 'ps', 'chmod', 'chown', 'netstat', 'kill', 'pid', 'apt', 'stat')
+def runBash (filename, folder, mode, fileToParse, database, time, table):
+	keyTerms = ('nmap', 'sudo', 'cp', 'rm', 'ps', 'chmod', 'chown', 'netstat', 'kill', 'pid')
 	#open file to save info if connection to database fails
 	if os.path.isfile("/UserStorage/" + folder + "/databaseSave" + mode):
 		saveLocally = open ("/UserStorage/" + folder + "/databaseSave" + mode, "a+")
@@ -139,27 +152,40 @@ def runBash (filename, folder, mode, fileToParse, database):
 		for term in keyTerms:
 			#print ('checking')
 			if fnmatch.fnmatch (line, term + "*"):
-				if database == 1:
-					#send info to database
-					pass
-				elif database == 0:
+				database, id = getID(database, table)
+				if id >= 50:
+					break
+				database.execute("INSERT INTO " + table + " VALUES (?, ?, ?, ?)", (id, folder, term, time))
+				continue
+				if database == 0:
 					#print ('hi')
 					#copy info to a file
 					saveLocally.write(line + "\n")
 					continue
 			elif 'su' == line or fnmatch.fnmatch (line, 'su *') or fnmatch.fnmatch (line, '* / *') or fnmatch.fnmatch (line, '* /'):
 				#send flag to database
-				if database == 1:
-					#send info to database
-					pass
-				elif database == 0:
+				database, id = getID(database, table)
+				if id >= 50:
+					break
+				database.execute("INSERT INTO " + table + " VALUES (?, ?, ?, ?)", (id, folder, term, time))
+				continue
+				if database == 0:
 					#print ('bye')
 					#copy info to a file
 					saveLocally.write(line + "\n")
 					continue
 
+	database.commit()
 	fileToParse.close()
-	return saveLocally
+	return saveLocally, database
+
+def getID(database, table):
+	cursor = database.execute ("SELECT id from " + table)
+	id = 0
+	for row in cursor:
+		id = row[0]
+	id += 1
+	return database, id
 
 ########## Move the file to a permanent location ##########
 def moveFile(filename, folder):
@@ -215,10 +241,10 @@ if __name__ == '__main__':
 								if child == 0:
 									#print ('child ran')
 									if fnmatch.fnmatch("/UserStorage/" + folder + "/Parsing" + filename, "/UserStorage/" + folder + "/" + "Parsingbashhist*.log"):
-										run(filename, folder, "Bash")
+										run(filename, folder, "Bash", filename[16:33])
 									elif fnmatch.fnmatch("Parsing" + filename, "Parsingnetwork*"):
 										#print ('network ran')
-										run(filename, folder, "Network")
+										run(filename, folder, "Network", filename[15:32])
 									else:
 										print ('no match')
 									os._exit(0)

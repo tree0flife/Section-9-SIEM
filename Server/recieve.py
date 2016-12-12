@@ -10,28 +10,34 @@ import time
 from zipfile import *
 
 def checkDatabase (clientID, clientPWD, clientTOK):
-	connection = sqlite3.connect('siem_site/test.sqlite3')
+	#print (clientID + "\t" + clientPWD + "\t" + clientTOK)
+	connection = sqlite3.connect('siem_site/db.sqlite3')
 	if clientTOK == 'none':
-		cursor = connection.execute("SELECT user, pass from auth where user = ? AND pass = ?", (clientID, clientPWD,))
+		cursor = connection.execute("SELECT username, password from client_client where username = ? AND password = ?", (clientID, clientPWD,))
 		data = cursor.fetchone()
 		if not data:
 			#print('login failed')
+			connection.close()
 			return 0
 		else:
 			token = random.randrange(100000, 999999)
-			connection.execute("DELETE FROM auth WHERE USER = ?", (clientID,));
-			connection.execute("INSERT INTO auth VALUES (?, ? , ?)", (clientID, clientPWD, token,));
+			#print ("\t" + str(token))
+			#connection.execute("DELETE FROM client_client WHERE username = ?", (clientID,))
+			connection.execute("UPDATE client_client set token = ? WHERE username = ?", (token, clientID,))
 			connection.commit()
 			#print('login succeeded')
+			connection.close()
 			return token
 	else:
-		cursor = connection.execute("SELECT user, pass, token from auth where user = ? AND pass = ? AND token = ?", (clientID, clientPWD, clientTOK,))
+		cursor = connection.execute("SELECT username, password, token from client_client where username = ? AND password = ? AND token = ?", (clientID, clientPWD, clientTOK,))
 		data = cursor.fetchone()
 		if not data:
 			#print('login failed')
+			connection.close()
 			return 0
 		else:
 			#print('login succeeded')
+			connection.close()
 			return 1
 
 ########### Make a backup of the new file if a file already exists with the same name ###########
@@ -206,7 +212,7 @@ if __name__ == '__main__':
 			os._exit(0)
 		print ('Connected to: '+addr[0]+':'+str(addr[1]))
 
-		#create a child which will 
+		#create a child which will
 		cld = os.fork()
 		if cld == 0:
 			suc = authUser(conn, addr)
