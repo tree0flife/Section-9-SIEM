@@ -16,7 +16,6 @@ class View_Client_Add(View):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            token = form.cleaned_data['token']
             form.save()
             form = self.form_class(None)
             context = {
