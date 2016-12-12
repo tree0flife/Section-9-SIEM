@@ -23,6 +23,8 @@ def createConnection(flag): #create connection to client Ryan
         try:
             #sock.connect(("localhost", 9999)) # for testing locally
             sock.connect(('24.150.80.188', 3000))
+	    if flag == 2:
+		return sock
             login(sock)
             print '[+] Connected'
             return sock
@@ -165,6 +167,7 @@ def dispatch(sock):
                     l = f.read(1024)
 		    print f.tell()
 		    if (f.tell() % 1024) > 0:
+			sock.send(l)
 			os.remove(match.group())
 			break
                 except socket.error:
@@ -174,18 +177,21 @@ def dispatch(sock):
 		    return 1
 	    f.close()
 
-    #sock.close()
+    time.sleep(1)
+    sock.send('done')
+    sock.close()
     print '[*] SUCCESS'
     print '[*] Connection closed'
-    return 0
+    #return 0
 
 #################################################################
 #			    BUTTER				#
 #################################################################
-def butter():
+def butter(sock):
     output = open("/root/siem9/shasta", "w")
-    server = sub.Popen(('tcpdump', '-q', '-nn', 'host', '192.168.91.135'), stdout=output)
-    return server
+    myHost = sock.getsockname()[0]
+    server = sub.Popen(('tcpdump', '-q', '-nn', 'host', myHost), stdout=output)
+    return server, sock
 
 #################################################################
 #                        SIGNAL HANDLER                         #
@@ -202,9 +208,11 @@ if __name__ == "__main__":
 
     signal.signal(signal.SIGTERM, signal_handler)
 
-    sock = createConnection(0)
+    sock = createConnection(2)
     sock = conn_handle(sock)
-    p = butter()
+    sock.send('getting IP')
+    p, sock = butter(sock)
+    sock.close()
 
     # NOTE: need to modify to watch for certain messages(signals) sent from the server
     #       (ex. server sends REFRESH, client execute()'s and sends data)
@@ -222,7 +230,7 @@ if __name__ == "__main__":
         collector.execute(0, None, str(sys.argv[1]))
         print 'sending...'
 
-        if (dispatch(sock) == 1):
-            sock = createConnection(0)
-            sock = conn_handle(sock)
-	p = butter()
+        sock = createConnection(0)
+        sock = conn_handle(sock)
+	p, sock = butter(sock)
+	dispatch(sock)
