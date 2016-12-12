@@ -60,10 +60,67 @@ def run (filename, folder, mode):
 	#Open the file to parse and create a list of key terms to search for
 	fileToParse = open ("/UserStorage/" + folder + "/Parsing" + filename)
 	if mode == 'Bash':
-		keyTerms = ('nmap', 'sudo', 'cp', 'rm', 'ps', 'chmod', 'chown', 'netstat', 'kill', 'pid', 'apt', 'stat')
+		saveLocally = runBash(filename, folder, mode)
 	elif mode == 'Network':
-		keyTerms = ('24.150.80.188')
+		saveLocally = runNetwork(filename, folder, mode)
 
+	if database == 0:
+		print ('saving')
+		saveLocally.close()
+
+	writeEndOfFile(filename, folder, mode)
+
+	#Copy the saved data to the database if there is extra data to send and a connection
+	if not (os.stat("/UserStorage/" + folder + "/databaseSave" + mode).st_size == 0):
+		if database == 1:
+			for line in saveLocally:
+				#send info to the server
+				pass
+			saveLocally.close()
+			os.remove("/UserStorage/" + folder + "/databaseSave" + mode)
+
+	moveFile(filename, folder)
+	#print ('Successfuly Ran')
+
+def runNetwork (filename, folder, mode):
+	keyTerms = ('24.150.80.188')
+	#open file to save info if connection to database fails
+	if os.path.isfile("/UserStorage/" + folder + "/databaseSave" + mode):
+		saveLocally = open ("/UserStorage/" + folder + "/databaseSave" + mode, "a+")
+	else:
+		saveLocally = open ("/UserStorage/" + folder + "/databaseSave" + mode, "w+")
+
+	#Parse the file and search for key terms
+	for myline in fileToParse:
+		#print (line)
+		myline = myline.rstrip('\n')
+		line = myline.split(" |.")
+		for term in keyTerms:
+			#print ('checking')
+			if fnmatch.fnmatch (line[3] + "." + line[4] + "." + line[5] + "." + line[6], term):
+				if database == 1:
+					#send info to database
+					pass
+				elif database == 0:
+					#print ('hi')
+					#copy info to a file
+					saveLocally.write(line + "\n")
+					continue
+			elif fnmatch.fnmatch (line[9] + "." + line[10] + "." + line[11] + "." + line[12], term):
+				if database == 1:
+					#send info to database
+					pass
+				elif database == 0:
+					#print ('hi')
+					#copy info to a file
+					saveLocally.write(line + "\n")
+					continue
+
+	fileToParse.close()
+	return saveLocally
+
+def runBash (filename, folder, mode):
+	keyTerms = ('nmap', 'sudo', 'cp', 'rm', 'ps', 'chmod', 'chown', 'netstat', 'kill', 'pid', 'apt', 'stat')
 	#open file to save info if connection to database fails
 	if os.path.isfile("/UserStorage/" + folder + "/databaseSave" + mode):
 		saveLocally = open ("/UserStorage/" + folder + "/databaseSave" + mode, "a+")
@@ -97,24 +154,7 @@ def run (filename, folder, mode):
 					continue
 
 	fileToParse.close()
-
-	if database == 0:
-		print ('saving')
-		saveLocally.close()
-
-	writeEndOfFile(filename, folder, mode)
-
-	#Copy the saved data to the database if there is extra data to send and a connection
-	if not (os.stat("/UserStorage/" + folder + "/databaseSave" + mode).st_size == 0):
-		if database == 1:
-			for line in saveLocally:
-				#send info to the server
-				pass
-			saveLocally.close()
-			os.remove("/UserStorage/" + folder + "/databaseSave" + mode)
-
-	moveFile(filename, folder)
-	#print ('Successfuly Ran')
+	return saveLocally
 
 ########## Move the file to a permanent location ##########
 def moveFile(filename, folder):
