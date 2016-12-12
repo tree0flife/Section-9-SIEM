@@ -2,6 +2,7 @@
 import os
 import fnmatch
 import time
+import re
 
 def editFile(filename, folder, mode):
 	oldLines = []
@@ -60,9 +61,9 @@ def run (filename, folder, mode):
 	#Open the file to parse and create a list of key terms to search for
 	fileToParse = open ("/UserStorage/" + folder + "/Parsing" + filename)
 	if mode == 'Bash':
-		saveLocally = runBash(filename, folder, mode)
+		saveLocally = runBash(filename, folder, mode, fileToParse, database)
 	elif mode == 'Network':
-		saveLocally = runNetwork(filename, folder, mode)
+		saveLocally = runNetwork(filename, folder, mode, fileToParse, database)
 
 	if database == 0:
 		print ('saving')
@@ -82,8 +83,8 @@ def run (filename, folder, mode):
 	moveFile(filename, folder)
 	#print ('Successfuly Ran')
 
-def runNetwork (filename, folder, mode):
-	keyTerms = ('24.150.80.188')
+def runNetwork (filename, folder, mode, fileToParse, database):
+	keyTerms = ('24.150.80.188', '192.168.0.666')
 	#open file to save info if connection to database fails
 	if os.path.isfile("/UserStorage/" + folder + "/databaseSave" + mode):
 		saveLocally = open ("/UserStorage/" + folder + "/databaseSave" + mode, "a+")
@@ -94,32 +95,36 @@ def runNetwork (filename, folder, mode):
 	for myline in fileToParse:
 		#print (line)
 		myline = myline.rstrip('\n')
-		line = myline.split(" |.")
+		line = myline.replace(".", " ").split()
+		#if len(line) > 6:
+			#print (line)
+			#print (line[3] + "." + line[4] + "." + line[5] + "." + line[6] +"\t" + keyTerms[0])
 		for term in keyTerms:
 			#print ('checking')
-			if fnmatch.fnmatch (line[3] + "." + line[4] + "." + line[5] + "." + line[6], term):
+			if len(line) > 6 and line[3] + "." + line[4] + "." + line[5] + "." + line[6] == term:
 				if database == 1:
 					#send info to database
 					pass
 				elif database == 0:
 					#print ('hi')
 					#copy info to a file
-					saveLocally.write(line + "\n")
+					print ("\tMatch: " + line[3] + "." + line[4] + "." + line[5] + "." + line[6])
+					saveLocally.write(myline + "\n")
 					continue
-			elif fnmatch.fnmatch (line[9] + "." + line[10] + "." + line[11] + "." + line[12], term):
+			elif len(line) > 12 and fnmatch.fnmatch (line[9] + "." + line[10] + "." + line[11] + "." + line[12], term):
 				if database == 1:
 					#send info to database
 					pass
 				elif database == 0:
 					#print ('hi')
 					#copy info to a file
-					saveLocally.write(line + "\n")
+					saveLocally.write(myline + "\n")
 					continue
 
 	fileToParse.close()
 	return saveLocally
 
-def runBash (filename, folder, mode):
+def runBash (filename, folder, mode, fileToParse, database):
 	keyTerms = ('nmap', 'sudo', 'cp', 'rm', 'ps', 'chmod', 'chown', 'netstat', 'kill', 'pid', 'apt', 'stat')
 	#open file to save info if connection to database fails
 	if os.path.isfile("/UserStorage/" + folder + "/databaseSave" + mode):
@@ -208,8 +213,12 @@ if __name__ == '__main__':
 								os.rename ("/UserStorage/" + folder + "/" + filename, "/UserStorage/" + folder + "/Parsing" + filename)
 								child = os.fork()
 								if child == 0:
+									#print ('child ran')
 									if fnmatch.fnmatch("/UserStorage/" + folder + "/Parsing" + filename, "/UserStorage/" + folder + "/" + "Parsingbashhist*.log"):
 										run(filename, folder, "Bash")
-									elif fnmatch.fnmatch(filename, "Parsingnetwork*"):
-			   							run(filename, folder, "Network")
+									elif fnmatch.fnmatch("Parsing" + filename, "Parsingnetwork*"):
+										#print ('network ran')
+										run(filename, folder, "Network")
+									else:
+										print ('no match')
 									os._exit(0)

@@ -167,6 +167,8 @@ def recieveZipFile(conn, clientID, addr):
 				#for file in os.listdir("/UserStorage/" + clientID + "/"):
 				if os.path.isfile("/UserStorage/" + clientID + "/bashhist.log"):
 					os.rename ("/UserStorage/" + clientID + "/bashhist.log", "/UserStorage/" + clientID + "/bashhist." + pack[9:28] + ".log")
+				if os.path.isfile("/UserStorage/" + clientID + "/network"):
+					os.rename ("/UserStorage/" + clientID + "/network", "/UserStorage/" + clientID + "/network." + pack[9:28])
 				os.remove("/UserStorage/" + clientID + "/" + pack)
 	#catch if the zip file is invalid
 	except BadZipFile:
