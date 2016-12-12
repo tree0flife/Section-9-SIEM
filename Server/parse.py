@@ -10,20 +10,26 @@ def editFile(filename, folder, mode):
 		for line in oldFile:
 			oldLines.append(line)
 
-	if not (os.path.isfile("/UserStorage/" + folder + "/endOf" + mode):
-	    	break
+	if not (os.path.isfile("/UserStorage/" + folder + "/endOf" + mode)):
+	    	return
+	elif os.stat("/UserStorage/" + folder + "/endOf" + mode).st_size == 0:
+		return
 	else:
 		endOfFile = open ("/UserStorage/" + folder + "/endOf" + mode, "r")
+
+	endList = endOfFile.readlines()
+	linesToCheck = sum(1 for line in open("/UserStorage/" + folder + "/endOf" + mode))
 
 	if endOfFile:
 		newFile = open("/UserStorage/" + folder + "/Parsing" + filename, "w")
 		#numOfLines = sum(1 for line in open("/UserStorage/" + folder + "/Parsing" + filename))
 		for line in oldLines:
-			if curLine == 25:
+			#print (endList[curLine].rstrip('\n') + "\t" + line.rstrip('\n') + "\t\t" + str(curLine) + "\t" + str(linesToCheck))
+			if curLine == linesToCheck:
 				newFile.write(line)
-			if line == endOfFile[curLine] and curLine < 25:
+			elif line.rstrip('\n') == endList[curLine].rstrip('\n') and curLine < linesToCheck:
 				curLine += 1
-			elif curLines < 25:
+			elif curLine < linesToCheck:
 				curLine == 0
 		newFile.close()
 	endOfFile.close()
@@ -38,7 +44,9 @@ def writeEndOfFile(filename, folder, mode):
 		for line in file:
 			count += 1
 			if count > numOfLines - 25:
-				endOfFile.write(line)			
+				endOfFile.write(line)
+
+	endOfFile.close()
 
 ########## Parse the bash files ##########
 def run (filename, folder, mode):
@@ -105,7 +113,7 @@ def run (filename, folder, mode):
 			saveLocally.close()
 			os.remove("/UserStorage/" + folder + "/databaseSave" + mode)
 
-	moveFile(filename, folder, mode)
+	moveFile(filename, folder)
 	#print ('Successfuly Ran')
 
 ########## Move the file to a permanent location ##########
@@ -127,7 +135,7 @@ def moveFile(filename, folder):
 		os.rename("/UserStorage/" + folder + "/Parsing" + filename, "/PermanentStorage/" + folder + "/" + filename)
 	except FileNotFoundError:
 		print ("Error moving file")
-	os.remove("/UserStorage/" + folder + "/Parsing" + filename)
+	#os.remove("/UserStorage/" + folder + "/Parsing" + filename)
 
 if __name__ == '__main__':
 	#constantly running features:
@@ -162,6 +170,6 @@ if __name__ == '__main__':
 								if child == 0:
 									if fnmatch.fnmatch("/UserStorage/" + folder + "/Parsing" + filename, "/UserStorage/" + folder + "/" + "Parsingbashhist*.log"):
 										run(filename, folder, "Bash")
-			   						else fnmatch.fnmatch(filename, "Parsingnetwork*"):
+									elif fnmatch.fnmatch(filename, "Parsingnetwork*"):
 			   							run(filename, folder, "Network")
 									os._exit(0)
