@@ -88,7 +88,7 @@ def run (filename, folder, mode, time):
 	#print ('Successfuly Ran')
 
 def runNetwork (filename, folder, mode, fileToParse, database, time, table):
-	keyTerms = ('24.150.80.188', '192.168.0.666')
+	keyTerms = ('24.150.80.188', '104.16.145.93', '66.147.244.82')
 	#open file to save info if connection to database fails
 	if os.path.isfile("/UserStorage/" + folder + "/databaseSave" + mode):
 		saveLocally = open ("/UserStorage/" + folder + "/databaseSave" + mode, "a+")
@@ -97,22 +97,30 @@ def runNetwork (filename, folder, mode, fileToParse, database, time, table):
 
 	#Parse the file and search for key terms
 	for myline in fileToParse:
-		#print (line)
+		next = 0
+		#print (myline)
 		myline = myline.rstrip('\n')
 		line = myline.replace(".", " ").split()
+		#print (line)
 		#if len(line) > 6:
 			#print (line)
 			#print (line[3] + "." + line[4] + "." + line[5] + "." + line[6] +"\t" + keyTerms[0])
+			#print (line[9] + "." + line[10] + "." + line[11] + "." + line[12])
 		for term in keyTerms:
 			#print ('checking')
-			ip = line[3] + "." + line[4] + "." + line[5] + "." + line[6]
-			ip2 = line[9] + "." + line[10] + "." + line[11] + "." + line[12]
+			if next == 1:
+				continue
+			if len(line) > 12:
+				ip = line[3] + "." + line[4] + "." + line[5] + "." + line[6]
+				ip2 = line[9] + "." + line[10] + "." + line[11] + "." + line[12]
 			if len(line) > 6 and ip == term:
 				database, id = getID(database, table)
-				if id == 50:
+				if id >= 100:
 					break
-				spam = database.execute("INSERT INTO " + table + " VALUES (?, ?, ?)", (id, folder, ip, time))
+				spam = database.execute("INSERT INTO " + table + " VALUES (?, ?, ?, ?)", (id, folder, ip, time))
+				database.commit()
 				#print (spam)
+				next = 1
 				continue
 				if database == 0:
 					#print ('hi')
@@ -122,10 +130,12 @@ def runNetwork (filename, folder, mode, fileToParse, database, time, table):
 					continue
 			elif len(line) > 12 and ip2 == term:
 				database, id = getID(database, table)
-				if id == 50:
+				if id >= 100:
 					break
 				spam = database.execute("INSERT INTO " + table + " VALUES (?, ?, ?, ?)", (id, folder, ip2, time))
+				database.commit()
 				#print (spam)
+				next = 1
 				continue
 				if database == 0:
 					#print ('hi')
@@ -148,14 +158,19 @@ def runBash (filename, folder, mode, fileToParse, database, time, table):
 	#Parse the file and search for key terms
 	for line in fileToParse:
 		#print (line)
+		next = 0
 		line = line.rstrip('\n')
 		for term in keyTerms:
+			if next == 1:
+				continue
 			#print ('checking')
 			if fnmatch.fnmatch (line, term + "*"):
 				database, id = getID(database, table)
-				if id >= 50:
+				if id >= 100:
 					break
 				database.execute("INSERT INTO " + table + " VALUES (?, ?, ?, ?)", (id, folder, term, time))
+				database.commit()
+				next = 1
 				continue
 				if database == 0:
 					#print ('hi')
@@ -165,9 +180,11 @@ def runBash (filename, folder, mode, fileToParse, database, time, table):
 			elif 'su' == line or fnmatch.fnmatch (line, 'su *') or fnmatch.fnmatch (line, '* / *') or fnmatch.fnmatch (line, '* /'):
 				#send flag to database
 				database, id = getID(database, table)
-				if id >= 50:
+				if id >= 100:
 					break
 				database.execute("INSERT INTO " + table + " VALUES (?, ?, ?, ?)", (id, folder, term, time))
+				database.commit()
+				next = 1
 				continue
 				if database == 0:
 					#print ('bye')
