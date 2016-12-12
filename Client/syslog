@@ -1,0 +1,38 @@
+Nov 24 06:25:02 ubuntu rsyslogd: [origin software="rsyslogd" swVersion="8.16.0" x-pid="920" x-info="http://www.rsyslog.com"] rsyslogd was HUPed
+Nov 24 07:17:01 ubuntu CRON[6296]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Nov 24 08:17:01 ubuntu CRON[6448]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Nov 24 08:40:15 ubuntu systemd[1]: snapd.refresh.timer: Adding 3h 28min 35.423811s random time.
+Nov 24 09:04:06 ubuntu systemd[1]: Created slice User Slice of matrix.
+Nov 24 09:04:06 ubuntu systemd[1]: Starting User Manager for UID 1000...
+Nov 24 09:04:06 ubuntu systemd[1]: Started Session 25 of user matrix.
+Nov 24 09:04:06 ubuntu systemd[6656]: Reached target Sockets.
+Nov 24 09:04:06 ubuntu systemd[6656]: Reached target Timers.
+Nov 24 09:04:06 ubuntu systemd[6656]: Reached target Paths.
+Nov 24 09:04:06 ubuntu systemd[6656]: Reached target Basic System.
+Nov 24 09:04:06 ubuntu systemd[6656]: Reached target Default.
+Nov 24 09:04:06 ubuntu systemd[6656]: Startup finished in 6ms.
+Nov 24 09:04:06 ubuntu systemd[1]: Started User Manager for UID 1000.
+Nov 24 09:08:15 ubuntu systemd[1]: Started Session 26 of user matrix.
+Nov 24 09:11:11 ubuntu systemd[1]: Started Session 27 of user matrix.
+Nov 24 09:12:08 ubuntu systemd[1]: Started Session 28 of user matrix.
+Nov 24 09:13:00 ubuntu systemd[1]: Started Session 29 of user matrix.
+Nov 24 09:14:07 ubuntu systemd[1]: Started Session 30 of user matrix.
+Nov 24 09:15:13 ubuntu systemd[1]: Started Session 31 of user matrix.
+Nov 24 09:16:00 ubuntu systemd[1]: Reloading.
+Nov 24 09:16:00 ubuntu systemd[1]: snapd.refresh.timer: Adding 2h 47min 33.208151s random time.
+Nov 24 09:16:00 ubuntu systemd[1]: apt-daily.timer: Adding 11h 32min 47.435174s random time.
+Nov 24 09:16:00 ubuntu systemd[1]: Started ACPI event daemon.
+Nov 24 09:16:00 ubuntu systemd[1]: Reloading.
+Nov 24 09:16:00 ubuntu systemd[1]: snapd.refresh.timer: Adding 3h 33min 908.352ms random time.
+Nov 24 09:16:00 ubuntu systemd[1]: apt-daily.timer: Adding 10h 55min 8.708675s random time.
+Nov 24 09:16:00 ubuntu systemd[1]: Started ACPI event daemon.
+Nov 24 09:16:15 ubuntu systemd[1]: Reloading.
+Nov 24 09:16:15 ubuntu systemd[1]: snapd.refresh.timer: Adding 1h 35.307069s random time.
+Nov 24 09:16:15 ubuntu systemd[1]: apt-daily.timer: Adding 2h 25min 49.429392s random time.
+Nov 24 09:16:15 ubuntu systemd[1]: Starting Daily apt activities...
+Nov 24 09:16:15 ubuntu systemd[1]: Started ACPI event daemon.
+Nov 24 09:16:15 ubuntu systemd[1]: Started Daily apt activities.
+Nov 24 09:16:15 ubuntu systemd[1]: apt-daily.timer: Adding 4h 27min 21.590934s random time.
+Nov 24 09:16:15 ubuntu systemd[1]: apt-daily.timer: Adding 3h 55min 17.263130s random time.
+Nov 24 09:17:01 ubuntu CRON[14645]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Nov 24 09:36:09 ubuntu systemd[1]: Started Session 33 of user matrix.

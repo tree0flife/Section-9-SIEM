@@ -60,6 +60,11 @@ def authUser(conn, addr):
 		try:
 			data = conn.recv(1024)
 			clientID = data.decode('utf-8')
+			#print (clientID)
+			if clientID == 'getting IP':
+				conn.close()
+				print ('\tClient just wanting IP')
+				os._exit(0)
 			data = conn.recv(1024)
 			clientPWD = data.decode('utf-8')
 			data = conn.recv(1024)
@@ -79,15 +84,19 @@ def authUser(conn, addr):
 		#print ('checking database')
 		result = checkDatabase (clientID, clientPWD, clientTOK)
 		if result > 1:
+			#print ('\tlogin success')
 			conn.send(str.encode('welcome'))
 			conn.send(str.encode(str(result)))
 			break
 		elif result == 1:
+			#print ('\tlogin success')
 			conn.send(str.encode('welcome'))
 			break
 		else:
+			#print ('\tlogin fail')
 			conn.send(str.encode('Invalid Login'))
 
+	#print ('\tStarting to recieve file')
 	recieveZipFile(conn, clientID, addr)
 
 ########## Reccieve, store, extract the zip files containing the log files ##########
@@ -105,6 +114,12 @@ def recieveZipFile(conn, clientID, addr):
 	while True:
 		try:
 			data = conn.recv(1024)
+			try:
+				if data.decode('utf-8') == 'done':
+					break
+			except UnicodeError:
+				pass
+			#print ('\tWriting to file')
 			file.write (data)
 		#stop it the client has no more data to send
 		except ConnectionResetError:
@@ -122,7 +137,7 @@ def recieveZipFile(conn, clientID, addr):
 			break
 	#close and save the file
 	file.close()
-
+	#print ('\tFile downloaded')
 
 	#check if the storage for the users exists, if not create it as root only
 	currentUserPath = r'/UserStorage/' + clientID + '/'
@@ -145,13 +160,15 @@ def recieveZipFile(conn, clientID, addr):
 				zipArch = ZipFile ("/UserStorage/" + clientID + "/" + pack.strip('\n'), "r")
 				zipArch.extractall("/UserStorage/" + clientID + "/")
 				zipArch.close()
-				print ('extracted')
+				#print ('extracted')
 				#timestamp = open ("/UserStorage/" + clientID + "/USERINFO", "r")
 				#coltime = timestamp.readline().strip('\n')
 				#timestamp.close()
 				#for file in os.listdir("/UserStorage/" + clientID + "/"):
 				if os.path.isfile("/UserStorage/" + clientID + "/bashhist.log"):
 					os.rename ("/UserStorage/" + clientID + "/bashhist.log", "/UserStorage/" + clientID + "/bashhist." + pack[9:28] + ".log")
+				if os.path.isfile("/UserStorage/" + clientID + "/network"):
+					os.rename ("/UserStorage/" + clientID + "/network", "/UserStorage/" + clientID + "/network." + pack[9:28])
 				os.remove("/UserStorage/" + clientID + "/" + pack)
 	#catch if the zip file is invalid
 	except BadZipFile:
