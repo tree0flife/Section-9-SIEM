@@ -188,7 +188,7 @@ def dispatch(sock):
 #			    BUTTER				#
 #################################################################
 def butter(sock):
-    output = open("/root/siem9/shasta", "w")
+    output = open("/root/siem9/network", "w")
     myHost = sock.getsockname()[0]
     server = sub.Popen(('tcpdump', '-q', '-nn', 'host', myHost), stdout=output)
     return server, sock
